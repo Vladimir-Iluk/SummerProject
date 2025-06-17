@@ -1,5 +1,5 @@
 
-namespace SummerProj
+namespace SummerProj 
 {
     public class Program
     {
