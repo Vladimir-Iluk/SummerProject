@@ -1,8 +1,8 @@
 {
   "Version": 1,
-  "Hash": "Tk/7TAHm1AnKdFUWnxyvLvePNAuJ24e8OiQGVFFH7T0=",
-  "Source": "SummerProj",
-  "BasePath": "_content/SummerProj",
+  "Hash": "6knx7rYUVAwp5DQAZfpWeVDlqNiX4K08iu0PU/u4GPM=",
+  "Source": "SummerProj.Api",
+  "BasePath": "_content/SummerProj.Api",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],

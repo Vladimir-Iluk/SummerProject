@@ -10,7 +10,7 @@ namespace DAL.EF.Entities
     public class Response
     {
         public Guid Id { get; set; }
-        public DataSetDateTime SentAt { get; set; }
+        public DateTime SentAt { get; set; }
         public ResponseStatus Status { get; set; }
         public Guid WorkerId { get; set; }
         public Guid VacancyId { get; set; }

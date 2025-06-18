@@ -14,6 +14,7 @@ namespace DAL.EF.Entities
         public string Address { get; set; }
         public string Phone { get; set; }
         public Guid ActivityTypeId { get; set; }
+        public ActivityType ActivityType { get; set; }
         public ICollection<Vacancy> Vacancies { get; set; }
         public ICollection<Agreement> Aggreements { get; set; }
     }
