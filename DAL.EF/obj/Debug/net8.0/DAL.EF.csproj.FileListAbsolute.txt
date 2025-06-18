@@ -11,3 +11,5 @@ C:\Users\Lenovo\source\repos\SummerProj\DAL.EF\obj\Debug\net8.0\DAL.EF.dll
 C:\Users\Lenovo\source\repos\SummerProj\DAL.EF\obj\Debug\net8.0\refint\DAL.EF.dll
 C:\Users\Lenovo\source\repos\SummerProj\DAL.EF\obj\Debug\net8.0\DAL.EF.pdb
 C:\Users\Lenovo\source\repos\SummerProj\DAL.EF\obj\Debug\net8.0\ref\DAL.EF.dll
+C:\Users\Lenovo\source\repos\SummerProj\DAL.EF\bin\Debug\net8.0\DAL.EF.runtimeconfig.json
+C:\Users\Lenovo\source\repos\SummerProj\DAL.EF\obj\Debug\net8.0\DAL.EF.genruntimeconfig.cache
