@@ -11,3 +11,6 @@ C:\Users\Lenovo\source\repos\SummerProj\BLL\obj\Debug\net8.0\refint\BLL.dll
 C:\Users\Lenovo\source\repos\SummerProj\BLL\obj\Debug\net8.0\BLL.pdb
 C:\Users\Lenovo\source\repos\SummerProj\BLL\obj\Debug\net8.0\ref\BLL.dll
 C:\Users\Lenovo\source\repos\SummerProj\BLL\obj\Debug\net8.0\BLL.csproj.AssemblyReference.cache
+C:\Users\Lenovo\source\repos\SummerProj\BLL\bin\Debug\net8.0\DAL.EF.dll
+C:\Users\Lenovo\source\repos\SummerProj\BLL\bin\Debug\net8.0\DAL.EF.pdb
+C:\Users\Lenovo\source\repos\SummerProj\BLL\obj\Debug\net8.0\BLL.csproj.Up2Date

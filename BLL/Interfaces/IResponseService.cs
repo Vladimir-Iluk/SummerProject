@@ -12,7 +12,7 @@ namespace BLL.Interfaces
         Task<IEnumerable<ResponseResponseDto>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<ResponseResponseDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task<ResponseResponseDto> CreateAsync(ResponseCreateDto dto, CancellationToken cancellationToken = default);
-        Task<bool> UpdateStatusAsync(Guid id, ResponseUpdateDto dto, CancellationToken cancellationToken = default);
+        Task<ResponseResponseDto?> UpdateAsync(Guid id, ResponseUpdateDto dto, CancellationToken cancellationToken = default);
         Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
     }
 }

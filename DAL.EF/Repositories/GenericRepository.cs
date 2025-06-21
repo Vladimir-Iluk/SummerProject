@@ -20,24 +20,29 @@ namespace DAL.EF.Repositories
             _dbSet = context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public IQueryable<T> GetAll()
         {
-            return await _dbSet.ToListAsync();
+            return _dbSet.AsQueryable();
         }
 
-        public async Task<T?> GetByIdAsync(Guid id)
+        public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return await _dbSet.FindAsync(id);
+            return await _dbSet.AsNoTracking().ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _dbSet.Where(predicate).ToListAsync();
+            return await _dbSet.FindAsync(new object[] { id }, cancellationToken);
         }
 
-        public async Task AddAsync(T entity)
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            await _dbSet.AddAsync(entity);
+            return await _dbSet.Where(predicate).AsNoTracking().ToListAsync(cancellationToken);
+        }
+
+        public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
+        {
+            await _dbSet.AddAsync(entity, cancellationToken);
         }
 
         public void Update(T entity)
@@ -48,11 +53,6 @@ namespace DAL.EF.Repositories
         public void Delete(T entity)
         {
             _dbSet.Remove(entity);
-        }
-
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
         }
     }
 }
