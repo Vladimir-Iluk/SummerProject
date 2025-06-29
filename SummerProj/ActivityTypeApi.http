@@ -1,0 +1,68 @@
+### Отримати всі типи активності
+GET https://localhost:7001/api/ActivityType
+Accept: application/json
+
+### Отримати тип активності за ID
+GET https://localhost:7001/api/ActivityType/{{activityTypeId}}
+Accept: application/json
+
+### Створити новий тип активності
+POST https://localhost:7001/api/ActivityType
+Content-Type: application/json
+Accept: application/json
+
+{
+  "activityTypeName": "IT та розробка програмного забезпечення"
+}
+
+### Оновити тип активності
+PUT https://localhost:7001/api/ActivityType/{{activityTypeId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "activityTypeName": "Оновлений тип активності"
+}
+
+### Видалити тип активності
+DELETE https://localhost:7001/api/ActivityType/{{activityTypeId}}
+Accept: application/json
+
+### Приклади створення різних типів активності
+POST https://localhost:7001/api/ActivityType
+Content-Type: application/json
+Accept: application/json
+
+{
+  "activityTypeName": "Фінанси та банківська справа"
+}
+
+###
+
+POST https://localhost:7001/api/ActivityType
+Content-Type: application/json
+Accept: application/json
+
+{
+  "activityTypeName": "Маркетинг та реклама"
+}
+
+###
+
+POST https://localhost:7001/api/ActivityType
+Content-Type: application/json
+Accept: application/json
+
+{
+  "activityTypeName": "Освіта та навчання"
+}
+
+###
+
+POST https://localhost:7001/api/ActivityType
+Content-Type: application/json
+Accept: application/json
+
+{
+  "activityTypeName": "Медицина та охорона здоров'я"
+} 

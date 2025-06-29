@@ -1,0 +1,88 @@
+### Отримати всіх працівників
+GET https://localhost:7001/api/Worker
+Accept: application/json
+
+### Отримати працівника за ID
+GET https://localhost:7001/api/Worker/{{workerId}}
+Accept: application/json
+
+### Створити нового працівника
+POST https://localhost:7001/api/Worker
+Content-Type: application/json
+Accept: application/json
+
+{
+  "firstName": "Іван",
+  "lastName": "Петренко",
+  "email": "ivan.petrenko@email.com",
+  "phone": "+380501234567",
+  "dateOfBirth": "1990-05-15",
+  "resume": "Досвідчений розробник з 5 роками досвіду в .NET",
+  "education": "Київський національний університет імені Тараса Шевченка"
+}
+
+### Оновити працівника
+PUT https://localhost:7001/api/Worker/{{workerId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "firstName": "Іван",
+  "lastName": "Петренко",
+  "email": "ivan.petrenko.updated@email.com",
+  "phone": "+380509876543",
+  "dateOfBirth": "1990-05-15",
+  "resume": "Оновлений досвідчений розробник з 6 роками досвіду в .NET",
+  "education": "Київський національний університет імені Тараса Шевченка"
+}
+
+### Видалити працівника
+DELETE https://localhost:7001/api/Worker/{{workerId}}
+Accept: application/json
+
+### Приклади створення різних працівників
+POST https://localhost:7001/api/Worker
+Content-Type: application/json
+Accept: application/json
+
+{
+  "firstName": "Марія",
+  "lastName": "Іваненко",
+  "email": "maria.ivanenko@email.com",
+  "phone": "+380502345678",
+  "dateOfBirth": "1988-12-20",
+  "resume": "Маркетолог з досвідом в digital маркетингу",
+  "education": "Київський економічний університет"
+}
+
+###
+
+POST https://localhost:7001/api/Worker
+Content-Type: application/json
+Accept: application/json
+
+{
+  "firstName": "Олександр",
+  "lastName": "Сидоренко",
+  "email": "oleksandr.sydorenko@email.com",
+  "phone": "+380503456789",
+  "dateOfBirth": "1992-08-10",
+  "resume": "UI/UX дизайнер з портфоліо в Figma",
+  "education": "Київська академія мистецтв"
+}
+
+###
+
+POST https://localhost:7001/api/Worker
+Content-Type: application/json
+Accept: application/json
+
+{
+  "firstName": "Анна",
+  "lastName": "Коваленко",
+  "email": "anna.kovalenko@email.com",
+  "phone": "+380504567890",
+  "dateOfBirth": "1995-03-25",
+  "resume": "QA інженер з досвідом автоматизації тестування",
+  "education": "Національний технічний університет України"
+} 

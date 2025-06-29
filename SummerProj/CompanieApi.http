@@ -1,0 +1,63 @@
+### Отримати всі компанії
+GET https://localhost:7001/api/Companie
+Accept: application/json
+
+### Отримати компанію за ID
+GET https://localhost:7001/api/Companie/{{companieId}}
+Accept: application/json
+
+### Створити нову компанію
+POST https://localhost:7001/api/Companie
+Content-Type: application/json
+Accept: application/json
+
+{
+  "companyName": "Tech Solutions Ltd",
+  "emailCompany": "info@techsolutions.com",
+  "address": "вул. Шевченка, 123, Київ",
+  "phone": "+380441234567",
+  "activityTypeId": "{{activityTypeId}}"
+}
+
+### Оновити компанію
+PUT https://localhost:7001/api/Companie/{{companieId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "companyName": "Tech Solutions Ukraine Ltd",
+  "emailCompany": "contact@techsolutions.ua",
+  "address": "вул. Хрещатик, 456, Київ",
+  "phone": "+380449876543",
+  "activityTypeId": "{{activityTypeId}}"
+}
+
+### Видалити компанію
+DELETE https://localhost:7001/api/Companie/{{companieId}}
+Accept: application/json
+
+### Приклад створення компанії з валідними даними
+POST https://localhost:7001/api/Companie
+Content-Type: application/json
+Accept: application/json
+
+{
+  "companyName": "Software Development Company",
+  "emailCompany": "hr@softdev.com",
+  "address": "вул. Велика Васильківська, 789, Київ",
+  "phone": "+380442345678",
+  "activityTypeId": "550e8400-e29b-41d4-a716-446655440000"
+}
+
+### Приклад оновлення компанії
+PUT https://localhost:7001/api/Companie/550e8400-e29b-41d4-a716-446655440001
+Content-Type: application/json
+Accept: application/json
+
+{
+  "companyName": "Updated Software Development Company",
+  "emailCompany": "updated@softdev.com",
+  "address": "вул. Оновлена, 999, Київ",
+  "phone": "+380449999999",
+  "activityTypeId": "550e8400-e29b-41d4-a716-446655440000"
+} 
