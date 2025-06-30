@@ -18,7 +18,8 @@ namespace DAL.EF.Configurations
                 .HasMaxLength(50)
                 .IsRequired();
             builder.Property(x => x.Commission)
-                .IsRequired();
+                .IsRequired()
+                .HasPrecision(18, 2);
             builder.Property(x=>x.AgreementDate)
                 .IsRequired();
             builder.HasOne(x => x.Worker)

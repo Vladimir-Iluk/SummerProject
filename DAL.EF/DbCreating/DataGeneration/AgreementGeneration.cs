@@ -19,7 +19,8 @@ namespace DAL.EF.DbCreating.DataGeneration
                 .RuleFor(a => a.WorkerId, f => f.PickRandom(workers).Id)
                 .RuleFor(a => a.CompanieId, f => f.PickRandom(companies).Id)
                 .RuleFor(a => a.Position, f => f.Name.JobTitle())
-                .RuleFor(a => a.Commission, f => f.Random.Decimal(100, 1000));
+                .RuleFor(a => a.Commission, f => f.Random.Decimal(100, 1000))
+                .RuleFor(a => a.AgreementDate, f => f.Date.Past(1));
 
             var agreements = faker.Generate(30);
             context.Agreements.AddRange(agreements);

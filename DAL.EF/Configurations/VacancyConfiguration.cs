@@ -22,7 +22,7 @@ namespace DAL.EF.Configurations
                 .IsRequired();
             builder.Property(x => x.Salary)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasPrecision(18, 2);
             builder.Property(x => x.CreatedAt)
                 .IsRequired();
             builder.Property(x=>x.IsOpen)

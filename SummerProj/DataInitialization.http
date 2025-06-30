@@ -1,0 +1,43 @@
+### ========================================
+### Ініціалізація бази даних тестовими даними
+### ========================================
+
+### Отримати статистику бази даних
+GET https://localhost:7001/api/DataInitialization/stats
+Accept: application/json
+
+### Ініціалізувати базу даних тестовими даними
+POST https://localhost:7001/api/DataInitialization/seed
+Accept: application/json
+
+### Очистити всі дані з бази даних
+DELETE https://localhost:7001/api/DataInitialization/clear
+Accept: application/json
+
+### ========================================
+### Послідовність тестування після ініціалізації
+### ========================================
+
+### 1. Перевірити типи активності
+GET https://localhost:7001/api/ActivityType
+Accept: application/json
+
+### 2. Перевірити компанії
+GET https://localhost:7001/api/Companie
+Accept: application/json
+
+### 3. Перевірити працівників
+GET https://localhost:7001/api/Worker
+Accept: application/json
+
+### 4. Перевірити вакансії
+GET https://localhost:7001/api/Vacancy
+Accept: application/json
+
+### 5. Перевірити відгуки
+GET https://localhost:7001/api/Response
+Accept: application/json
+
+### 6. Перевірити угоди
+GET https://localhost:7001/api/Agreement
+Accept: application/json 

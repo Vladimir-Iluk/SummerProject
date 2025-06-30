@@ -585,6 +585,69 @@
     ]
   },
   {
+    "ContainingType": "SummerProj.Api.Controllers.DataInitializationController",
+    "Method": "ClearDataAsync",
+    "RelativePath": "api/DataInitialization/clear",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "SummerProj.Api.Controllers.DataInitializationController",
+    "Method": "SeedDataAsync",
+    "RelativePath": "api/DataInitialization/seed",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "SummerProj.Api.Controllers.DataInitializationController",
+    "Method": "GetDatabaseStatsAsync",
+    "RelativePath": "api/DataInitialization/stats",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 200
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
     "ContainingType": "SummerProj.Api.Controllers.ResponseController",
     "Method": "GetAllAsync",
     "RelativePath": "api/Response",

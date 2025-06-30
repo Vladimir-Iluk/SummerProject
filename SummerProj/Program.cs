@@ -32,11 +32,10 @@ namespace SummerProj
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
             builder.Services.AddDbContext<SummerDbContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseNpgsql(connectionString));
 
             // Реєстрація AutoMapper
             builder.Services.AddAutoMapper(typeof(EntityMappingProfile).Assembly);
-
 
             // Реєстрація репозиторіїв
             builder.Services.AddScoped<ICompanieRepository, CompanieRepository>();
@@ -78,6 +77,58 @@ namespace SummerProj
             builder.Services.AddScoped<IValidator<BLL.DTO.WorkerDto.WorkerUpdateDto>, WorkerUpdateDtoValidation>();
 
             var app = builder.Build();
+
+            // Ініціалізація бази даних при запуску
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<SummerDbContext>();
+                
+                try
+                {
+                    // Застосовуємо міграції
+                    Console.WriteLine("Застосування міграцій...");
+                    context.Database.Migrate();
+                    Console.WriteLine("Міграції успішно застосовані");
+                    
+                    // Перевіряємо чи база порожня
+                    var hasActivityTypes = context.ActivityTypes.Any();
+                    var hasCompanies = context.Companies.Any();
+                    var hasWorkers = context.Workers.Any();
+                    var hasVacancies = context.Vacancies.Any();
+                    var hasResponses = context.Responses.Any();
+                    var hasAgreements = context.Agreements.Any();
+                    
+                    Console.WriteLine($"Статус таблиць: ActivityTypes={hasActivityTypes}, Companies={hasCompanies}, Workers={hasWorkers}, Vacancies={hasVacancies}, Responses={hasResponses}, Agreements={hasAgreements}");
+                    
+                    // Ініціалізуємо тестові дані, якщо база порожня
+                    if (!hasActivityTypes && !hasCompanies && !hasWorkers && !hasVacancies && !hasResponses && !hasAgreements)
+                    {
+                        Console.WriteLine("Починаємо ініціалізацію тестових даних...");
+                        context.SeedData();
+                        Console.WriteLine("База даних успішно ініціалізована тестовими даними");
+                    }
+                    else
+                    {
+                        Console.WriteLine("База даних вже містить дані, ініціалізація пропущена");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"КРИТИЧНА ПОМИЛКА при ініціалізації бази даних: {ex.Message}");
+                    Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+                    
+                    // Перевіряємо підключення до бази
+                    try
+                    {
+                        var canConnect = context.Database.CanConnect();
+                        Console.WriteLine($"Можливість підключення до БД: {canConnect}");
+                    }
+                    catch (Exception connEx)
+                    {
+                        Console.WriteLine($"Помилка підключення до БД: {connEx.Message}");
+                    }
+                }
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

@@ -77,7 +77,7 @@ namespace DAL.EF.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Position = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "character varying(240)", maxLength: 240, nullable: false),
-                    Salary = table.Column<decimal>(type: "numeric", maxLength: 50, nullable: false),
+                    Salary = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IsOpen = table.Column<bool>(type: "boolean", nullable: false),
                     CompanieId = table.Column<Guid>(type: "uuid", nullable: false)
@@ -99,7 +99,7 @@ namespace DAL.EF.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Position = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Commission = table.Column<decimal>(type: "numeric", nullable: false),
+                    Commission = table.Column<decimal>(type: "numeric(18,2)", precision: 18, scale: 2, nullable: false),
                     AgreementDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     WorkerId = table.Column<Guid>(type: "uuid", nullable: false),
                     CompanieId = table.Column<Guid>(type: "uuid", nullable: false)

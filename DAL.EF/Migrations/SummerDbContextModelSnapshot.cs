@@ -17,7 +17,7 @@ namespace DAL.EF.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.6")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -48,7 +48,8 @@ namespace DAL.EF.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("Commission")
-                        .HasColumnType("numeric");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.Property<Guid>("CompanieId")
                         .HasColumnType("uuid");
@@ -160,8 +161,8 @@ namespace DAL.EF.Migrations
                         .HasColumnType("character varying(50)");
 
                     b.Property<decimal>("Salary")
-                        .HasMaxLength(50)
-                        .HasColumnType("numeric");
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
 
                     b.HasKey("Id");
 

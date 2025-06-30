@@ -1,0 +1,55 @@
+### Тестування API Summer Project
+
+### 1. Перевірка статистики бази даних
+GET https://localhost:7001/api/DataInitialization/stats
+Accept: application/json
+
+### 2. Ініціалізація тестовими даними (якщо база порожня)
+POST https://localhost:7001/api/DataInitialization/seed
+Accept: application/json
+
+### 3. Перевірка типів активності
+GET https://localhost:7001/api/ActivityType
+Accept: application/json
+
+### 4. Перевірка компаній
+GET https://localhost:7001/api/Companie
+Accept: application/json
+
+### 5. Перевірка працівників
+GET https://localhost:7001/api/Worker
+Accept: application/json
+
+### 6. Перевірка вакансій
+GET https://localhost:7001/api/Vacancy
+Accept: application/json
+
+### 7. Перевірка відгуків
+GET https://localhost:7001/api/Response
+Accept: application/json
+
+### 8. Перевірка угод
+GET https://localhost:7001/api/Agreement
+Accept: application/json
+
+### 9. Тест створення нового типу активності
+POST https://localhost:7001/api/ActivityType
+Content-Type: application/json
+Accept: application/json
+
+{
+  "activityTypeName": "Тестовий тип активності"
+}
+
+### 10. Тест створення нової компанії
+POST https://localhost:7001/api/Companie
+Content-Type: application/json
+Accept: application/json
+
+{
+  "companyName": "Тестова компанія",
+  "emailCompany": "test@company.com",
+  "address": "Тестова адреса, 123",
+  "phone": "+380501234567",
+  "activityTypeId": "{{activityTypeId}}"
+} 

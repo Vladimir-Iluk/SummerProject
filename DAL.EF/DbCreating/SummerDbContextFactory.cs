@@ -14,7 +14,7 @@ namespace DAL.EF.DbCreating
         public SummerDbContext CreateDbContext(string[] args)
         {
             DbContextOptionsBuilder<SummerDbContext> optionsBuilder = new DbContextOptionsBuilder<SummerDbContext>();
-            var connectionString = "Host=localhost;Port=5432;Database=SummerBase;Username=postgres;Password=zxc123";
+            var connectionString = "Host=localhost;Port=5432;Database=dataSummer;Username=postgres;Password=zxc123";
             optionsBuilder.UseNpgsql(connectionString);
             return new SummerDbContext(optionsBuilder.Options);
         }
