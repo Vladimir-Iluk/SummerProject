@@ -5,32 +5,32 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace DAL.EF.Repositories
 {
     public class WorkerRepository : GenericRepository<Worker>, IWorkerRepository
     {
-        private readonly SummerDbContext _context;
-
         public WorkerRepository(SummerDbContext context)
             : base(context)
         {
-            _context = context;
         }
 
-        public override async Task<IEnumerable<Worker>> GetAllAsync(CancellationToken cancellationToken = default)
+        public override async Task<IEnumerable<Worker>> GetAllAsync(
+            Func<IQueryable<Worker>, IQueryable<Worker>>? include = null,
+            Expression<Func<Worker, bool>>? filter = null,
+            CancellationToken cancellationToken = default)
         {
-            return await _context.Workers
-                .Include(w => w.ActivityType)
-                .ToListAsync(cancellationToken);
+            return await base.GetAllAsync(include, filter, cancellationToken);
         }
 
-        public override async Task<Worker> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public override async Task<Worker?> GetByIdAsync(
+            Guid id,
+            Func<IQueryable<Worker>, IQueryable<Worker>>? include = null,
+            CancellationToken cancellationToken = default)
         {
-            return await _context.Workers
-                .Include(w => w.ActivityType)
-                .FirstOrDefaultAsync(w => w.Id == id, cancellationToken);
+            return await base.GetByIdAsync(id, include, cancellationToken);
         }
     }
 }

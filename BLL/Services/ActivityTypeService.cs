@@ -3,6 +3,7 @@ using BLL.DTO.ActivityTypeDto;
 using BLL.Interfaces;
 using DAL.EF.Entities;
 using DAL.EF.UoW;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -23,13 +24,18 @@ namespace BLL.Services
 
         public async Task<IEnumerable<ActivityTypeResponseDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var list = await _uow.ActivityTypes.GetAllAsync(cancellationToken);
+            var list = await _uow.ActivityTypes.GetAllAsync(
+                include: query => query.Include(at => at.Workers).Include(at => at.Companies),
+                cancellationToken: cancellationToken);
             return _mapper.Map<IEnumerable<ActivityTypeResponseDto>>(list);
         }
 
         public async Task<ActivityTypeResponseDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var entity = await _uow.ActivityTypes.GetByIdAsync(id, cancellationToken);
+            var entity = await _uow.ActivityTypes.GetByIdAsync(
+                id,
+                include: query => query.Include(at => at.Workers).Include(at => at.Companies),
+                cancellationToken: cancellationToken);
             return entity == null ? null : _mapper.Map<ActivityTypeResponseDto>(entity);
         }
 
@@ -43,7 +49,10 @@ namespace BLL.Services
 
         public async Task<ActivityTypeResponseDto?> UpdateAsync(Guid id, ActivityTypeUpdateDto dto, CancellationToken cancellationToken = default)
         {
-            var entity = await _uow.ActivityTypes.GetByIdAsync(id, cancellationToken);
+            var entity = await _uow.ActivityTypes.GetByIdAsync(
+                id,
+                include: query => query.Include(at => at.Workers).Include(at => at.Companies),
+                cancellationToken: cancellationToken);
             if (entity == null) return null;
 
             _mapper.Map(dto, entity);
@@ -54,7 +63,9 @@ namespace BLL.Services
 
         public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var entity = await _uow.ActivityTypes.GetByIdAsync(id, cancellationToken);
+            var entity = await _uow.ActivityTypes.GetByIdAsync(
+                id,
+                cancellationToken: cancellationToken);
             if (entity == null) return false;
 
             _uow.ActivityTypes.Delete(entity); 

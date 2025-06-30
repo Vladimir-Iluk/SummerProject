@@ -11,48 +11,103 @@ namespace DAL.EF.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        private readonly SummerDbContext _context;
-        private readonly DbSet<T> _dbSet;
+        protected readonly SummerDbContext Context;
+        protected readonly DbSet<T> DbSet;
 
         public GenericRepository(SummerDbContext context)
         {
-            _context = context;
-            _dbSet = context.Set<T>();
+            Context = context;
+            DbSet = context.Set<T>();
         }
 
         public IQueryable<T> GetAll()
         {
-            return _dbSet.AsQueryable();
+            return DbSet.AsQueryable();
         }
 
-        public virtual async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
+        public virtual async Task<IEnumerable<T>> GetAllAsync(
+            Func<IQueryable<T>, IQueryable<T>>? include = null,
+            Expression<Func<T, bool>>? filter = null,
+            CancellationToken cancellationToken = default)
         {
-            return await _dbSet.AsNoTracking().ToListAsync(cancellationToken);
+            var query = DbSet.AsQueryable();
+
+            if (include != null)
+            {
+                query = include(query);
+            }
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            return await query.AsNoTracking().ToListAsync(cancellationToken);
         }
 
-        public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public virtual async Task<T?> GetByIdAsync(
+            Guid id,
+            Func<IQueryable<T>, IQueryable<T>>? include = null,
+            CancellationToken cancellationToken = default)
         {
-            return await _dbSet.FindAsync(new object[] { id }, cancellationToken);
+            var query = DbSet.AsQueryable();
+
+            if (include != null)
+            {
+                query = include(query);
+            }
+
+            // Оскільки ми не знаємо ім'я властивості ID, використовуємо EF Core Find
+            var entity = await DbSet.FindAsync(new object[] { id }, cancellationToken);
+
+            if (entity == null)
+                return null;
+
+            // Якщо є include, довантажуємо пов'язані дані
+            if (include != null)
+            {
+                await Context.Entry(entity)
+                    .ReloadAsync(cancellationToken);
+                
+                var queryWithIncludes = include(DbSet.AsQueryable());
+                entity = await queryWithIncludes
+                    .FirstOrDefaultAsync(e => Microsoft.EntityFrameworkCore.EF.Property<Guid>(e, "Id") == id, cancellationToken);
+            }
+
+            return entity;
         }
 
-        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<T>> FindAsync(
+            Expression<Func<T, bool>> predicate,
+            Func<IQueryable<T>, IQueryable<T>>? include = null,
+            CancellationToken cancellationToken = default)
         {
-            return await _dbSet.Where(predicate).AsNoTracking().ToListAsync(cancellationToken);
+            var query = DbSet.AsQueryable();
+
+            if (include != null)
+            {
+                query = include(query);
+            }
+
+            return await query
+                .Where(predicate)
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
         }
 
         public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
         {
-            await _dbSet.AddAsync(entity, cancellationToken);
+            await DbSet.AddAsync(entity, cancellationToken);
         }
 
         public void Update(T entity)
         {
-            _dbSet.Update(entity);
+            DbSet.Update(entity);
         }
 
         public void Delete(T entity)
         {
-            _dbSet.Remove(entity);
+            DbSet.Remove(entity);
         }
     }
 }

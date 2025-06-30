@@ -3,6 +3,7 @@ using BLL.DTO.CompanieDto;
 using BLL.Interfaces;
 using DAL.EF.Entities;
 using DAL.EF.UoW;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -25,13 +26,18 @@ namespace BLL.Services
 
         public async Task<IEnumerable<CompanieResponseDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var companies = await _uow.Companies.GetAllAsync(cancellationToken);
+            var companies = await _uow.Companies.GetAllAsync(
+                include: query => query.Include(c => c.ActivityType),
+                cancellationToken: cancellationToken);
             return _mapper.Map<IEnumerable<CompanieResponseDto>>(companies);
         }
 
         public async Task<CompanieResponseDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var company = await _uow.Companies.GetByIdAsync(id, cancellationToken);
+            var company = await _uow.Companies.GetByIdAsync(
+                id,
+                include: query => query.Include(c => c.ActivityType),
+                cancellationToken: cancellationToken);
             if (company == null) return null;
 
             var dto = _mapper.Map<CompanieResponseDto>(company);
@@ -42,7 +48,9 @@ namespace BLL.Services
         public async Task<CompanieResponseDto> CreateAsync(CompanieCreateDto dto, CancellationToken cancellationToken = default)
         {
             // Перевіряємо, чи існує вказаний тип активності
-            var activityType = await _uow.ActivityTypes.GetByIdAsync(dto.ActivityTypeId, cancellationToken);
+            var activityType = await _uow.ActivityTypes.GetByIdAsync(
+                dto.ActivityTypeId,
+                cancellationToken: cancellationToken);
             if (activityType == null)
             {
                 throw new ValidationException($"ActivityType з ID {dto.ActivityTypeId} не знайдено");
@@ -52,19 +60,27 @@ namespace BLL.Services
             await _uow.Companies.AddAsync(entity, cancellationToken);
             await _uow.SaveAsync(cancellationToken);
 
-            var createdCompany = await _uow.Companies.GetByIdAsync(entity.Id, cancellationToken);
+            var createdCompany = await _uow.Companies.GetByIdAsync(
+                entity.Id,
+                include: query => query.Include(c => c.ActivityType),
+                cancellationToken: cancellationToken);
             return _mapper.Map<CompanieResponseDto>(createdCompany);
         }
 
         public async Task<CompanieResponseDto?> UpdateAsync(Guid id, CompanieUpdateDto dto, CancellationToken cancellationToken = default)
         {
-            var entity = await _uow.Companies.GetByIdAsync(id, cancellationToken);
+            var entity = await _uow.Companies.GetByIdAsync(
+                id,
+                include: query => query.Include(c => c.ActivityType),
+                cancellationToken: cancellationToken);
             if (entity == null) return null;
 
             // Перевіряємо, чи існує вказаний тип активності
             if (dto.ActivityTypeId != entity.ActivityTypeId)
             {
-                var activityType = await _uow.ActivityTypes.GetByIdAsync(dto.ActivityTypeId, cancellationToken);
+                var activityType = await _uow.ActivityTypes.GetByIdAsync(
+                    dto.ActivityTypeId,
+                    cancellationToken: cancellationToken);
                 if (activityType == null)
                 {
                     throw new ValidationException($"ActivityType з ID {dto.ActivityTypeId} не знайдено");
@@ -75,13 +91,18 @@ namespace BLL.Services
             _uow.Companies.Update(entity);
             await _uow.SaveAsync(cancellationToken);
 
-            var updatedCompany = await _uow.Companies.GetByIdAsync(id, cancellationToken);
+            var updatedCompany = await _uow.Companies.GetByIdAsync(
+                id,
+                include: query => query.Include(c => c.ActivityType),
+                cancellationToken: cancellationToken);
             return _mapper.Map<CompanieResponseDto>(updatedCompany);
         }
 
         public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var entity = await _uow.Companies.GetByIdAsync(id, cancellationToken);
+            var entity = await _uow.Companies.GetByIdAsync(
+                id,
+                cancellationToken: cancellationToken);
             if (entity == null) return false;
 
             _uow.Companies.Delete(entity);

@@ -15,6 +15,10 @@ C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\FluentValida
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\FluentValidation.AspNetCore.dll
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Humanizer.dll
+C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.CodeAnalysis.dll
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.dll
@@ -27,6 +31,9 @@ C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.En
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.Identity.Client.dll
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.Identity.Client.Extensions.Msal.dll
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
@@ -125,8 +132,8 @@ C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\runtimes\win
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\BLL.dll
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\DAL.EF.dll
-C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\DAL.EF.pdb
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\BLL.pdb
+C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\DAL.EF.pdb
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\obj\Debug\net8.0\SummerProj.Api.csproj.AssemblyReference.cache
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\obj\Debug\net8.0\SummerProj.Api.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\obj\Debug\net8.0\SummerProj.Api.AssemblyInfoInputs.cache
@@ -149,10 +156,3 @@ C:\Users\Lenovo\source\repos\SummerProj\SummerProj\obj\Debug\net8.0\refint\Summe
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\obj\Debug\net8.0\SummerProj.Api.pdb
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\obj\Debug\net8.0\SummerProj.Api.genruntimeconfig.cache
 C:\Users\Lenovo\source\repos\SummerProj\SummerProj\obj\Debug\net8.0\ref\SummerProj.Api.dll
-C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.Internal.dll
-C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
-C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
-C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.Extensions.Identity.Core.dll
-C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.Extensions.Identity.Stores.dll
-C:\Users\Lenovo\source\repos\SummerProj\SummerProj\bin\Debug\net8.0\Microsoft.Extensions.Options.dll

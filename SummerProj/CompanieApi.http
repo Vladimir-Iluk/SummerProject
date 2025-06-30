@@ -1,40 +1,43 @@
+@SummerProj_HostAddress = http://localhost:5049
+
 ### Отримати всі компанії
-GET https://localhost:7001/api/Companie
+GET {{SummerProj_HostAddress}}/api/Companie
 Accept: application/json
 
 ### Отримати компанію за ID
-GET https://localhost:7001/api/Companie/{{companieId}}
+GET {{SummerProj_HostAddress}}/api/Companie/{{companieId}}
 Accept: application/json
 
 ### Створити нову компанію
-POST https://localhost:7001/api/Companie
+POST {{SummerProj_HostAddress}}/api/Companie
 Content-Type: application/json
-Accept: application/json
+Authorization: Bearer {{authToken}}
 
 {
-  "companyName": "Tech Solutions Ltd",
-  "emailCompany": "info@techsolutions.com",
-  "address": "вул. Шевченка, 123, Київ",
-  "phone": "+380441234567",
-  "activityTypeId": "{{activityTypeId}}"
+  "name": "Tech Solutions Ltd",
+  "description": "Leading software development company",
+  "email": "contact@techsolutions.com",
+  "phone": "+380991234567",
+  "activityTypeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 }
 
 ### Оновити компанію
-PUT https://localhost:7001/api/Companie/{{companieId}}
+PUT {{SummerProj_HostAddress}}/api/Companie/{{companieId}}
 Content-Type: application/json
-Accept: application/json
+Authorization: Bearer {{authToken}}
 
 {
-  "companyName": "Tech Solutions Ukraine Ltd",
-  "emailCompany": "contact@techsolutions.ua",
-  "address": "вул. Хрещатик, 456, Київ",
-  "phone": "+380449876543",
-  "activityTypeId": "{{activityTypeId}}"
+  "name": "Tech Solutions Ltd",
+  "description": "Leading software development and consulting company",
+  "email": "contact.updated@techsolutions.com",
+  "phone": "+380991234567",
+  "activityTypeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 }
 
 ### Видалити компанію
-DELETE https://localhost:7001/api/Companie/{{companieId}}
+DELETE {{SummerProj_HostAddress}}/api/Companie/{{companieId}}
 Accept: application/json
+Authorization: Bearer {{authToken}}
 
 ### Приклад створення компанії з валідними даними
 POST https://localhost:7001/api/Companie

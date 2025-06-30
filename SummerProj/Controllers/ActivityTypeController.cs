@@ -5,6 +5,7 @@ using BLL.Pagination;
 using BLL.Exceptions;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 
 namespace SummerProj.Api.Controllers
 {
@@ -14,10 +15,12 @@ namespace SummerProj.Api.Controllers
     public class ActivityTypeController : ControllerBase
     {
         private readonly IActivityTypeService _activityTypeService;
+        private readonly ILogger<ActivityTypeController> _logger;
 
-        public ActivityTypeController(IActivityTypeService activityTypeService)
+        public ActivityTypeController(IActivityTypeService activityTypeService, ILogger<ActivityTypeController> logger)
         {
             _activityTypeService = activityTypeService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -39,6 +42,7 @@ namespace SummerProj.Api.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Помилка при отриманні типів активності");
                 return StatusCode(StatusCodes.Status500InternalServerError, 
                     new { message = "Помилка при отриманні типів активності", error = ex.Message });
             }
@@ -50,7 +54,7 @@ namespace SummerProj.Api.Controllers
         /// <param name="id">ID типу активності</param>
         /// <param name="cancellationToken">Токен скасування</param>
         /// <returns>Тип активності</returns>
-        [HttpGet("{id:guid}")]
+        [HttpGet("{id:guid}", Name = "GetActivityTypeById")]
         [AllowAnonymous] // Доступно всім
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -72,6 +76,7 @@ namespace SummerProj.Api.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Помилка при отриманні типу активності");
                 return StatusCode(StatusCodes.Status500InternalServerError, 
                     new { message = "Помилка при отриманні типу активності", error = ex.Message });
             }
@@ -94,24 +99,42 @@ namespace SummerProj.Api.Controllers
         {
             try
             {
+                _logger.LogInformation("Отримано запит на створення типу активності: {CreateDto}", createDto);
+
+                if (createDto == null)
+                {
+                    return BadRequest(new { message = "Дані для створення типу активності не надані" });
+                }
+
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    var errors = ModelState
+                        .Where(x => x.Value.Errors.Count > 0)
+                        .ToDictionary(
+                            kvp => kvp.Key,
+                            kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                        );
+
+                    return BadRequest(new { message = "Неправильний формат даних", errors });
                 }
 
                 var createdActivityType = await _activityTypeService.CreateAsync(createDto, cancellationToken);
                 
-                return CreatedAtAction(
-                    nameof(GetByIdAsync), 
-                    new { id = createdActivityType.Id }, 
+                _logger.LogInformation("Тип активності успішно створено з ID: {ActivityTypeId}", createdActivityType.Id);
+
+                return CreatedAtRoute(
+                    "GetActivityTypeById",
+                    new { id = createdActivityType.Id },
                     createdActivityType);
             }
             catch (ValidationException ex)
             {
+                _logger.LogWarning("Помилка валідації при створенні типу активності: {Error}", ex.Message);
                 return BadRequest(new { message = "Помилка валідації", error = ex.Message });
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Помилка при створенні типу активності");
                 return StatusCode(StatusCodes.Status500InternalServerError, 
                     new { message = "Помилка при створенні типу активності", error = ex.Message });
             }
@@ -153,10 +176,12 @@ namespace SummerProj.Api.Controllers
             }
             catch (ValidationException ex)
             {
+                _logger.LogWarning("Помилка валідації при оновленні типу активності: {Error}", ex.Message);
                 return BadRequest(new { message = "Помилка валідації", error = ex.Message });
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Помилка при оновленні типу активності");
                 return StatusCode(StatusCodes.Status500InternalServerError, 
                     new { message = "Помилка при оновленні типу активності", error = ex.Message });
             }
@@ -190,6 +215,7 @@ namespace SummerProj.Api.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Помилка при видаленні типу активності");
                 return StatusCode(StatusCodes.Status500InternalServerError, 
                     new { message = "Помилка при видаленні типу активності", error = ex.Message });
             }

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,26 +13,24 @@ namespace DAL.EF.Repositories
 {
     public class CompanieRepository : GenericRepository<Companie>, ICompanieRepository
     {
-        private readonly SummerDbContext _context;
-
         public CompanieRepository(SummerDbContext context) : base(context)
         {
-            _context = context;
         }
 
-        public override async Task<IEnumerable<Companie>> GetAllAsync(CancellationToken cancellationToken = default)
+        public override async Task<IEnumerable<Companie>> GetAllAsync(
+            Func<IQueryable<Companie>, IQueryable<Companie>>? include = null,
+            Expression<Func<Companie, bool>>? filter = null,
+            CancellationToken cancellationToken = default)
         {
-            return await _context.Companies
-                .Include(c => c.ActivityType)
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+            return await base.GetAllAsync(include, filter, cancellationToken);
         }
 
-        public override async Task<Companie?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public override async Task<Companie?> GetByIdAsync(
+            Guid id,
+            Func<IQueryable<Companie>, IQueryable<Companie>>? include = null,
+            CancellationToken cancellationToken = default)
         {
-            return await _context.Companies
-                .Include(c => c.ActivityType)
-                .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+            return await base.GetByIdAsync(id, include, cancellationToken);
         }
     }
 }

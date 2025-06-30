@@ -3,6 +3,7 @@ using BLL.DTO.WorkerDto;
 using BLL.Interfaces;
 using DAL.EF.Entities;
 using DAL.EF.UoW;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,15 +23,20 @@ namespace BLL.Services
 
         public async Task<IEnumerable<WorkerResponseDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var workers = await _uow.Workers.GetAllAsync(cancellationToken);
+            var workers = await _uow.Workers.GetAllAsync(
+                include: query => query.Include(w => w.ActivityType),
+                cancellationToken: cancellationToken);
             return _mapper.Map<IEnumerable<WorkerResponseDto>>(workers);
         }
 
-        public async Task<WorkerResponseDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<WorkerResponseDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var worker = await _uow.Workers.GetByIdAsync(id, cancellationToken);
+            var worker = await _uow.Workers.GetByIdAsync(
+                id,
+                include: query => query.Include(w => w.ActivityType),
+                cancellationToken: cancellationToken);
             if (worker == null)
-                throw new KeyNotFoundException($"Worker with ID {id} not found");
+                return null;
 
             return _mapper.Map<WorkerResponseDto>(worker);
         }
@@ -38,7 +44,9 @@ namespace BLL.Services
         public async Task<WorkerResponseDto> CreateAsync(WorkerCreateDto dto, CancellationToken cancellationToken = default)
         {
             // Перевіряємо, чи існує вказаний тип активності
-            var activityType = await _uow.ActivityTypes.GetByIdAsync(dto.ActivityTypeId, cancellationToken);
+            var activityType = await _uow.ActivityTypes.GetByIdAsync(
+                dto.ActivityTypeId,
+                cancellationToken: cancellationToken);
             if (activityType == null)
                 throw new KeyNotFoundException($"ActivityType with ID {dto.ActivityTypeId} not found");
 
@@ -48,23 +56,31 @@ namespace BLL.Services
             await _uow.SaveAsync(cancellationToken);
 
             // Отримуємо створеного працівника з бази даних
-            var createdWorker = await _uow.Workers.GetByIdAsync(entity.Id, cancellationToken);
+            var createdWorker = await _uow.Workers.GetByIdAsync(
+                entity.Id,
+                include: query => query.Include(w => w.ActivityType),
+                cancellationToken: cancellationToken);
             if (createdWorker == null)
                 throw new Exception("Worker was not created properly");
 
             return _mapper.Map<WorkerResponseDto>(createdWorker);
         }
 
-        public async Task<WorkerResponseDto> UpdateAsync(Guid id, WorkerUpdateDto dto, CancellationToken cancellationToken = default)
+        public async Task<WorkerResponseDto?> UpdateAsync(Guid id, WorkerUpdateDto dto, CancellationToken cancellationToken = default)
         {
-            var entity = await _uow.Workers.GetByIdAsync(id, cancellationToken);
+            var entity = await _uow.Workers.GetByIdAsync(
+                id,
+                include: query => query.Include(w => w.ActivityType),
+                cancellationToken: cancellationToken);
             if (entity == null)
-                throw new KeyNotFoundException($"Worker with ID {id} not found");
+                return null;
 
             // Перевіряємо, чи існує вказаний тип активності
             if (dto.ActivityTypeId != Guid.Empty)
             {
-                var activityType = await _uow.ActivityTypes.GetByIdAsync(dto.ActivityTypeId, cancellationToken);
+                var activityType = await _uow.ActivityTypes.GetByIdAsync(
+                    dto.ActivityTypeId,
+                    cancellationToken: cancellationToken);
                 if (activityType == null)
                     throw new KeyNotFoundException($"ActivityType with ID {dto.ActivityTypeId} not found");
             }
@@ -78,7 +94,9 @@ namespace BLL.Services
 
         public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var entity = await _uow.Workers.GetByIdAsync(id, cancellationToken);
+            var entity = await _uow.Workers.GetByIdAsync(
+                id,
+                cancellationToken: cancellationToken);
             if (entity == null)
                 return false;
 

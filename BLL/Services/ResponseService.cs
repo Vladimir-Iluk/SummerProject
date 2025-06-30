@@ -3,6 +3,7 @@ using BLL.DTO.ResponseDto;
 using BLL.Interfaces;
 using DAL.EF.Entities;
 using DAL.EF.UoW;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,13 +25,18 @@ namespace BLL.Services
 
         public async Task<IEnumerable<ResponseResponseDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            var responses = await _uow.Responses.GetAllAsync(cancellationToken);
+            var responses = await _uow.Responses.GetAllAsync(
+                include: query => query.Include(r => r.Worker).Include(r => r.Vacancy),
+                cancellationToken: cancellationToken);
             return _mapper.Map<IEnumerable<ResponseResponseDto>>(responses);
         }
 
         public async Task<ResponseResponseDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var response = await _uow.Responses.GetByIdAsync(id, cancellationToken);
+            var response = await _uow.Responses.GetByIdAsync(
+                id,
+                include: query => query.Include(r => r.Worker).Include(r => r.Vacancy),
+                cancellationToken: cancellationToken);
             if (response == null) return null;
 
             var dto = _mapper.Map<ResponseResponseDto>(response);
@@ -53,7 +59,10 @@ namespace BLL.Services
 
         public async Task<ResponseResponseDto?> UpdateAsync(Guid id, ResponseUpdateDto dto, CancellationToken cancellationToken = default)
         {
-            var entity = await _uow.Responses.GetByIdAsync(id, cancellationToken);
+            var entity = await _uow.Responses.GetByIdAsync(
+                id,
+                include: query => query.Include(r => r.Worker).Include(r => r.Vacancy),
+                cancellationToken: cancellationToken);
             if (entity == null) return null;
 
             _mapper.Map(dto, entity);
@@ -65,7 +74,9 @@ namespace BLL.Services
 
         public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var entity = await _uow.Responses.GetByIdAsync(id, cancellationToken);
+            var entity = await _uow.Responses.GetByIdAsync(
+                id,
+                cancellationToken: cancellationToken);
             if (entity == null) return false;
 
             _uow.Responses.Delete(entity);
@@ -73,5 +84,4 @@ namespace BLL.Services
             return true;
         }
     }
-
 }

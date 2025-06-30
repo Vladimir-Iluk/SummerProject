@@ -1,44 +1,45 @@
+@SummerProj_HostAddress = http://localhost:5049
+
 ### Отримати всіх працівників
-GET https://localhost:7001/api/Worker
+GET {{SummerProj_HostAddress}}/api/Worker
 Accept: application/json
 
 ### Отримати працівника за ID
-GET https://localhost:7001/api/Worker/{{workerId}}
+GET {{SummerProj_HostAddress}}/api/Worker/{{workerId}}
 Accept: application/json
 
 ### Створити нового працівника
-POST https://localhost:7001/api/Worker
+POST {{SummerProj_HostAddress}}/api/Worker
 Content-Type: application/json
-Accept: application/json
+Authorization: Bearer {{authToken}}
 
 {
-  "firstName": "Іван",
-  "lastName": "Петренко",
-  "email": "ivan.petrenko@email.com",
-  "phone": "+380501234567",
-  "dateOfBirth": "1990-05-15",
-  "resume": "Досвідчений розробник з 5 роками досвіду в .NET",
-  "education": "Київський національний університет імені Тараса Шевченка"
+  "firstName": "John",
+  "lastName": "Doe",
+  "middleName": "Smith",
+  "email": "john.doe@example.com",
+  "phone": "+380991234567",
+  "activityTypeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 }
 
 ### Оновити працівника
-PUT https://localhost:7001/api/Worker/{{workerId}}
+PUT {{SummerProj_HostAddress}}/api/Worker/{{workerId}}
 Content-Type: application/json
-Accept: application/json
+Authorization: Bearer {{authToken}}
 
 {
-  "firstName": "Іван",
-  "lastName": "Петренко",
-  "email": "ivan.petrenko.updated@email.com",
-  "phone": "+380509876543",
-  "dateOfBirth": "1990-05-15",
-  "resume": "Оновлений досвідчений розробник з 6 роками досвіду в .NET",
-  "education": "Київський національний університет імені Тараса Шевченка"
+  "firstName": "John",
+  "lastName": "Doe",
+  "middleName": "Smith",
+  "email": "john.doe.updated@example.com",
+  "phone": "+380991234567",
+  "activityTypeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 }
 
 ### Видалити працівника
-DELETE https://localhost:7001/api/Worker/{{workerId}}
+DELETE {{SummerProj_HostAddress}}/api/Worker/{{workerId}}
 Accept: application/json
+Authorization: Bearer {{authToken}}
 
 ### Приклади створення різних працівників
 POST https://localhost:7001/api/Worker

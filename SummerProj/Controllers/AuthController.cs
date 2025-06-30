@@ -36,7 +36,12 @@ namespace SummerProj.Controllers
             var user = new ApplicationUser
             {
                 UserName = model.Email,
-                Email = model.Email
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                PhoneNumber = model.PhoneNumber,
+                RegisteredAt = DateTime.UtcNow,
+                IsActive = true
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -96,7 +101,12 @@ namespace SummerProj.Controllers
             var user = new ApplicationUser
             {
                 UserName = model.Email,
-                Email = model.Email
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                PhoneNumber = model.PhoneNumber,
+                RegisteredAt = DateTime.UtcNow,
+                IsActive = true
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);
