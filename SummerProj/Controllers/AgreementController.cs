@@ -4,11 +4,13 @@ using BLL.DTO.AgreementDto;
 using BLL.Pagination;
 using BLL.Exceptions;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SummerProj.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize] // Базова авторизація для всіх методів
     public class AgreementController : ControllerBase
     {
         private readonly IAgreementService _agreementService;
@@ -24,6 +26,7 @@ namespace SummerProj.Api.Controllers
         /// <param name="cancellationToken">Токен скасування</param>
         /// <returns>Список всіх угод</returns>
         [HttpGet]
+        [Authorize(Roles = "Admin")] // Тільки адміністратори можуть бачити всі угоди
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<AgreementResponseDto>>> GetAllAsync(
@@ -48,6 +51,7 @@ namespace SummerProj.Api.Controllers
         /// <param name="cancellationToken">Токен скасування</param>
         /// <returns>Угода</returns>
         [HttpGet("{id:guid}")]
+        [Authorize(Roles = "Admin")] // Тільки адміністратори можуть отримувати угоди за ID
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -80,6 +84,7 @@ namespace SummerProj.Api.Controllers
         /// <param name="cancellationToken">Токен скасування</param>
         /// <returns>Створена угода</returns>
         [HttpPost]
+        [Authorize(Roles = "Admin")] // Тільки адміністратори можуть створювати угоди
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -120,6 +125,7 @@ namespace SummerProj.Api.Controllers
         /// <param name="cancellationToken">Токен скасування</param>
         /// <returns>Оновлена угода</returns>
         [HttpPut("{id:guid}")]
+        [Authorize(Roles = "Admin")] // Тільки адміністратори можуть оновлювати угоди
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -163,6 +169,7 @@ namespace SummerProj.Api.Controllers
         /// <param name="cancellationToken">Токен скасування</param>
         /// <returns>Результат видалення</returns>
         [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "Admin")] // Тільки адміністратори можуть видаляти угоди
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

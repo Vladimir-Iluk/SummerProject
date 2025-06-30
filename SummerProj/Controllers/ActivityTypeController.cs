@@ -4,11 +4,13 @@ using BLL.DTO.ActivityTypeDto;
 using BLL.Pagination;
 using BLL.Exceptions;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SummerProj.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize] // Базова авторизація для всіх методів
     public class ActivityTypeController : ControllerBase
     {
         private readonly IActivityTypeService _activityTypeService;
@@ -24,6 +26,7 @@ namespace SummerProj.Api.Controllers
         /// <param name="cancellationToken">Токен скасування</param>
         /// <returns>Список всіх типів активності</returns>
         [HttpGet]
+        [AllowAnonymous] // Доступно всім
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<ActivityTypeResponseDto>>> GetAllAsync(
@@ -48,6 +51,7 @@ namespace SummerProj.Api.Controllers
         /// <param name="cancellationToken">Токен скасування</param>
         /// <returns>Тип активності</returns>
         [HttpGet("{id:guid}")]
+        [AllowAnonymous] // Доступно всім
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -80,6 +84,7 @@ namespace SummerProj.Api.Controllers
         /// <param name="cancellationToken">Токен скасування</param>
         /// <returns>Створений тип активності</returns>
         [HttpPost]
+        [Authorize(Roles = "Admin")] // Тільки для адміністраторів
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -120,6 +125,7 @@ namespace SummerProj.Api.Controllers
         /// <param name="cancellationToken">Токен скасування</param>
         /// <returns>Оновлений тип активності</returns>
         [HttpPut("{id:guid}")]
+        [Authorize(Roles = "Admin")] // Тільки для адміністраторів
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -163,6 +169,7 @@ namespace SummerProj.Api.Controllers
         /// <param name="cancellationToken">Токен скасування</param>
         /// <returns>Результат видалення</returns>
         [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "Admin")] // Тільки для адміністраторів
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

@@ -4,11 +4,13 @@ using BLL.DTO.ResponseDto;
 using BLL.Pagination;
 using BLL.Exceptions;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SummerProj.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize] // Базова авторизація для всіх методів
     public class ResponseController : ControllerBase
     {
         private readonly IResponseService _responseService;
@@ -24,6 +26,7 @@ namespace SummerProj.Api.Controllers
         /// <param name="cancellationToken">Токен скасування</param>
         /// <returns>Список всіх відгуків</returns>
         [HttpGet]
+        [Authorize(Roles = "Admin")] // Тільки адміністратори можуть бачити всі відгуки
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<ResponseResponseDto>>> GetAllAsync(
@@ -163,6 +166,7 @@ namespace SummerProj.Api.Controllers
         /// <param name="cancellationToken">Токен скасування</param>
         /// <returns>Результат видалення</returns>
         [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "Admin")] // Тільки адміністратори можуть видаляти відгуки
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

@@ -7,10 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace DAL.EF.DbCreating
 {
-    public class SummerDbContext : DbContext
+    public class SummerDbContext : IdentityDbContext<ApplicationUser>
     {
         public SummerDbContext(DbContextOptions<SummerDbContext> options) 
             : base(options) { }
@@ -23,6 +24,8 @@ namespace DAL.EF.DbCreating
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.ApplyConfiguration(new WorkerConfiguration());
             modelBuilder.ApplyConfiguration(new CompanieConfiguration());
             modelBuilder.ApplyConfiguration(new VacancyConfiguration());

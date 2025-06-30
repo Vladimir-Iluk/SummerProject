@@ -13,12 +13,19 @@ using DAL.EF.Repositories.Interfaces;
 using DAL.EF.Repositories;
 using DAL.EF.UoW;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using DAL.EF.Entities;
+using Microsoft.OpenApi.Models;
+using System.Security.Claims;
 
 namespace SummerProj 
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -27,12 +34,94 @@ namespace SummerProj
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Summer Project API", Version = "v1" });
+
+                // Додаємо конфігурацію для JWT автентифікації в Swagger
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
+            });
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
             builder.Services.AddDbContext<SummerDbContext>(options =>
                 options.UseNpgsql(connectionString));
+
+            // Identity configuration
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequiredLength = 8;
+            })
+            .AddEntityFrameworkStores<SummerDbContext>()
+            .AddDefaultTokenProviders();
+
+            // JWT Authentication
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not found in configuration")))
+                };
+
+                // Додаємо обробку подій для діагностики
+                options.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = context =>
+                    {
+                        Console.WriteLine($"Authentication failed: {context.Exception.Message}");
+                        return Task.CompletedTask;
+                    },
+                    OnTokenValidated = context =>
+                    {
+                        Console.WriteLine($"Token validated successfully for user: {context.Principal?.Identity?.Name}");
+                        var roles = context.Principal?.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value);
+                        Console.WriteLine($"User roles: {string.Join(", ", roles ?? Array.Empty<string>())}");
+                        return Task.CompletedTask;
+                    },
+                    OnChallenge = context =>
+                    {
+                        Console.WriteLine($"Challenge occurred: {context.Error}, {context.ErrorDescription}");
+                        return Task.CompletedTask;
+                    }
+                };
+            });
 
             // Реєстрація AutoMapper
             builder.Services.AddAutoMapper(typeof(EntityMappingProfile).Assembly);
@@ -61,6 +150,7 @@ namespace SummerProj
             builder.Services.AddScoped<IResponseService, ResponseService>();
             builder.Services.AddScoped<IVacancyService, VacancyService>();
             builder.Services.AddScoped<IWorkerService, WorkerService>();
+            builder.Services.AddScoped<JwtService>();
 
             // Реєстрація валідаторів
             builder.Services.AddScoped<IValidator<BLL.DTO.CompanieDto.CompanieCreateDto>, CompanieCreateDtoValidation>();
@@ -75,6 +165,9 @@ namespace SummerProj
             builder.Services.AddScoped<IValidator<BLL.DTO.VacancyDto.VacancyUpdateDto>, VacancyUpdateDtoValidation>();
             builder.Services.AddScoped<IValidator<BLL.DTO.WorkerDto.WorkerCreateDto>, WorkerCreateDtoValidation>();
             builder.Services.AddScoped<IValidator<BLL.DTO.WorkerDto.WorkerUpdateDto>, WorkerUpdateDtoValidation>();
+
+            // Додаємо авторизацію
+            builder.Services.AddAuthorization();
 
             var app = builder.Build();
 
@@ -139,11 +232,28 @@ namespace SummerProj
 
             app.UseHttpsRedirection();
 
+            // Важливо: UseAuthentication має бути перед UseAuthorization
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
 
-            app.Run();
+            // Ініціалізація ролей
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var roles = new[] { "Admin", "User" };
+
+                foreach (var role in roles)
+                {
+                    if (!await roleManager.RoleExistsAsync(role))
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(role));
+                    }
+                }
+            }
+
+            await app.RunAsync();
         }
     }
 }
