@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "9MYXL9xRpvE=",
+  "dgSpecHash": "3Hw06tjJ5fA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Lenovo\\source\\repos\\SummerProj\\BLL\\BLL.csproj",
+  "projectFilePath": "C:\\Users\\Lenovo\\source\\repos\\Vladimir-Iluk\\SummerProject\\BLL\\BLL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lenovo\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\bogus\\35.6.3\\bogus.35.6.3.nupkg.sha512",
@@ -47,7 +47,7 @@
       "code": "NU1903",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'Npgsql' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-x9vc-6hfv-hg8c",
+      "message": "У пакета \"Npgsql\" 8.0.2 есть известная уязвимость https://github.com/advisories/GHSA-x9vc-6hfv-hg8c (уровень серьезности: высокий уровень)",
       "libraryId": "Npgsql",
       "targetGraphs": [
         "net8.0"

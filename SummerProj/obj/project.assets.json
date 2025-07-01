@@ -4962,11 +4962,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Lenovo\\source\\repos\\SummerProj\\SummerProj\\SummerProj.Api.csproj",
+      "projectUniqueName": "C:\\Users\\Lenovo\\source\\repos\\Vladimir-Iluk\\SummerProject\\SummerProj\\SummerProj.Api.csproj",
       "projectName": "SummerProj.Api",
-      "projectPath": "C:\\Users\\Lenovo\\source\\repos\\SummerProj\\SummerProj\\SummerProj.Api.csproj",
+      "projectPath": "C:\\Users\\Lenovo\\source\\repos\\Vladimir-Iluk\\SummerProject\\SummerProj\\SummerProj.Api.csproj",
       "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Lenovo\\source\\repos\\SummerProj\\SummerProj\\obj\\",
+      "outputPath": "C:\\Users\\Lenovo\\source\\repos\\Vladimir-Iluk\\SummerProject\\SummerProj\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -4988,11 +4988,11 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\Lenovo\\source\\repos\\SummerProj\\BLL\\BLL.csproj": {
-              "projectPath": "C:\\Users\\Lenovo\\source\\repos\\SummerProj\\BLL\\BLL.csproj"
+            "C:\\Users\\Lenovo\\source\\repos\\Vladimir-Iluk\\SummerProject\\BLL\\BLL.csproj": {
+              "projectPath": "C:\\Users\\Lenovo\\source\\repos\\Vladimir-Iluk\\SummerProject\\BLL\\BLL.csproj"
             },
-            "C:\\Users\\Lenovo\\source\\repos\\SummerProj\\DAL.EF\\DAL.EF.csproj": {
-              "projectPath": "C:\\Users\\Lenovo\\source\\repos\\SummerProj\\DAL.EF\\DAL.EF.csproj"
+            "C:\\Users\\Lenovo\\source\\repos\\Vladimir-Iluk\\SummerProject\\DAL.EF\\DAL.EF.csproj": {
+              "projectPath": "C:\\Users\\Lenovo\\source\\repos\\Vladimir-Iluk\\SummerProject\\DAL.EF\\DAL.EF.csproj"
             }
           }
         }
@@ -5081,7 +5081,7 @@
       "code": "NU1903",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'Npgsql' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-x9vc-6hfv-hg8c",
+      "message": "У пакета \"Npgsql\" 8.0.2 есть известная уязвимость https://github.com/advisories/GHSA-x9vc-6hfv-hg8c (уровень серьезности: высокий уровень)",
       "libraryId": "Npgsql",
       "targetGraphs": [
         "net8.0"

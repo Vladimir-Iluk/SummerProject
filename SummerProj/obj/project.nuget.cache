@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "zk3UHjD63cA=",
+  "dgSpecHash": "jvluspsIIw4=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Lenovo\\source\\repos\\SummerProj\\SummerProj\\SummerProj.Api.csproj",
+  "projectFilePath": "C:\\Users\\Lenovo\\source\\repos\\Vladimir-Iluk\\SummerProject\\SummerProj\\SummerProj.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lenovo\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
@@ -105,7 +105,7 @@
       "code": "NU1903",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'Npgsql' 8.0.2 has a known high severity vulnerability, https://github.com/advisories/GHSA-x9vc-6hfv-hg8c",
+      "message": "У пакета \"Npgsql\" 8.0.2 есть известная уязвимость https://github.com/advisories/GHSA-x9vc-6hfv-hg8c (уровень серьезности: высокий уровень)",
       "libraryId": "Npgsql",
       "targetGraphs": [
         "net8.0"

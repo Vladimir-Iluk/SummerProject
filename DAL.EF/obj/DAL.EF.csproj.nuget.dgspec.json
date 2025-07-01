@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lenovo\\source\\repos\\SummerProj\\DAL.EF\\DAL.EF.csproj": {}
+    "C:\\Users\\Lenovo\\source\\repos\\Vladimir-Iluk\\SummerProject\\DAL.EF\\DAL.EF.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lenovo\\source\\repos\\SummerProj\\DAL.EF\\DAL.EF.csproj": {
+    "C:\\Users\\Lenovo\\source\\repos\\Vladimir-Iluk\\SummerProject\\DAL.EF\\DAL.EF.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lenovo\\source\\repos\\SummerProj\\DAL.EF\\DAL.EF.csproj",
+        "projectUniqueName": "C:\\Users\\Lenovo\\source\\repos\\Vladimir-Iluk\\SummerProject\\DAL.EF\\DAL.EF.csproj",
         "projectName": "DAL.EF",
-        "projectPath": "C:\\Users\\Lenovo\\source\\repos\\SummerProj\\DAL.EF\\DAL.EF.csproj",
+        "projectPath": "C:\\Users\\Lenovo\\source\\repos\\Vladimir-Iluk\\SummerProject\\DAL.EF\\DAL.EF.csproj",
         "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lenovo\\source\\repos\\SummerProj\\DAL.EF\\obj\\",
+        "outputPath": "C:\\Users\\Lenovo\\source\\repos\\Vladimir-Iluk\\SummerProject\\DAL.EF\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
