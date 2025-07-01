@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using BLL.DTO.ResponseDto;
+using BLL.DTO.CommonDto;
 using BLL.Interfaces;
+using BLL.Pagination;
 using DAL.EF.Entities;
 using DAL.EF.UoW;
 using Microsoft.EntityFrameworkCore;
@@ -23,11 +25,23 @@ namespace BLL.Services
             _uow = unitOfWork;
         }
 
-        public async Task<IEnumerable<ResponseResponseDto>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<ResponseResponseDto>> GetAllAsync(string? searchTerm = null, CancellationToken cancellationToken = default)
         {
-            var responses = await _uow.Responses.GetAllAsync(
-                include: query => query.Include(r => r.Worker).Include(r => r.Vacancy),
-                cancellationToken: cancellationToken);
+            var query = _uow.Responses.GetAll();
+            query = query.Include(r => r.Worker).Include(r => r.Vacancy);
+
+            // Застосовуємо пошук
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var searchTermLower = searchTerm.ToLower();
+                query = query.Where(r => 
+                    r.Worker.FirstName.ToLower().Contains(searchTermLower) ||
+                    r.Worker.LastName.ToLower().Contains(searchTermLower) ||
+                    r.Vacancy.Position.ToLower().Contains(searchTermLower) ||
+                    r.Status.ToString().ToLower().Contains(searchTermLower));
+            }
+
+            var responses = await query.ToListAsync(cancellationToken);
             return _mapper.Map<IEnumerable<ResponseResponseDto>>(responses);
         }
 
@@ -82,6 +96,58 @@ namespace BLL.Services
             _uow.Responses.Delete(entity);
             await _uow.SaveAsync(cancellationToken);
             return true;
+        }
+
+        public async Task<PagedList<ResponseResponseDto>> GetPagedAsync(SearchParametersDto searchParams, CancellationToken cancellationToken = default)
+        {
+            var query = _uow.Responses.GetAll();
+            query = query.Include(r => r.Worker).Include(r => r.Vacancy);
+
+            // Застосовуємо пошук
+            if (!string.IsNullOrWhiteSpace(searchParams.SearchTerm))
+            {
+                var searchTerm = searchParams.SearchTerm.ToLower();
+                query = query.Where(r => 
+                    r.Worker.FirstName.ToLower().Contains(searchTerm) ||
+                    r.Worker.LastName.ToLower().Contains(searchTerm) ||
+                    r.Vacancy.Position.ToLower().Contains(searchTerm) ||
+                    r.Status.ToString().ToLower().Contains(searchTerm));
+            }
+
+            // Застосовуємо сортування
+            IQueryable<Response> orderedQuery;
+            if (!string.IsNullOrEmpty(searchParams.SortBy))
+            {
+                bool desc = string.Equals(searchParams.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                orderedQuery = searchParams.SortBy.ToLower() switch
+                {
+                    "workername" => desc ? query.OrderByDescending(x => x.Worker.LastName) : query.OrderBy(x => x.Worker.LastName),
+                    "position" => desc ? query.OrderByDescending(x => x.Vacancy.Position) : query.OrderBy(x => x.Vacancy.Position),
+                    "status" => desc ? query.OrderByDescending(x => x.Status) : query.OrderBy(x => x.Status),
+                    "sentat" => desc ? query.OrderByDescending(x => x.SentAt) : query.OrderBy(x => x.SentAt),
+                    _ => query.OrderBy(x => x.SentAt)
+                };
+            }
+            else
+            {
+                orderedQuery = query.OrderBy(x => x.SentAt);
+            }
+
+            // Виконуємо пагінацію на рівні Entity
+            var pagedEntities = await PagedList<Response>.ToPagedListAsync(
+                orderedQuery, 
+                searchParams.PageNumber, 
+                searchParams.PageSize, 
+                cancellationToken);
+
+            // Мапимо результат
+            var dtos = _mapper.Map<List<ResponseResponseDto>>(pagedEntities.Items);
+            
+            return new PagedList<ResponseResponseDto>(
+                dtos, 
+                pagedEntities.TotalCount, 
+                pagedEntities.CurrentPage, 
+                pagedEntities.PageSize);
         }
     }
 }

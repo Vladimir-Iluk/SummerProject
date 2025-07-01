@@ -16,13 +16,13 @@ namespace BLL.Services
             _configuration = configuration;
         }
 
-        public string GenerateJwtToken(ApplicationUser user, IList<string> roles = null)
+        public string GenerateJwtToken(ApplicationUser user, IList<string>? roles = null)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Name, user.UserName ?? string.Empty),
+                new Claim(ClaimTypes.Email, user.Email ?? string.Empty)
             };
 
             // Додаємо ролі до claims
@@ -34,7 +34,7 @@ namespace BLL.Services
                 }
             }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? string.Empty));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["Jwt:ExpireDays"]));
 

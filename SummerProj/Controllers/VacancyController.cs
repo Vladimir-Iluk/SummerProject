@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BLL.Interfaces;
 using BLL.DTO.VacancyDto;
+using BLL.DTO.CommonDto;
 using BLL.Pagination;
 using BLL.Exceptions;
 using System.ComponentModel.DataAnnotations;
@@ -21,20 +22,35 @@ namespace SummerProj.Api.Controllers
         }
 
         /// <summary>
-        /// Отримати всі вакансії
+        /// Отримати вакансії з пагінацією та пошуком
         /// </summary>
+        /// <param name="searchParams">Параметри пошуку та пагінації</param>
         /// <param name="cancellationToken">Токен скасування</param>
-        /// <returns>Список всіх вакансій</returns>
+        /// <returns>Сторінкований список вакансій</returns>
         [HttpGet]
         [AllowAnonymous] // Доступно всім
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<VacancyResponseDto>>> GetAllAsync(
+        public async Task<ActionResult<PagedList<VacancyResponseDto>>> GetAllAsync(
+            [FromQuery] SearchParametersDto searchParams,
             CancellationToken cancellationToken = default)
         {
             try
             {
-                var vacancies = await _vacancyService.GetAllAsync(cancellationToken);
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState
+                        .Where(x => x.Value.Errors.Count > 0)
+                        .ToDictionary(
+                            kvp => kvp.Key,
+                            kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                        );
+
+                    return BadRequest(new { message = "Неправильні параметри пошуку", errors });
+                }
+
+                var vacancies = await _vacancyService.GetPagedAsync(searchParams, cancellationToken);
                 return Ok(vacancies);
             }
             catch (Exception ex)

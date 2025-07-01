@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using BLL.DTO.CompanieDto;
+using BLL.DTO.CommonDto;
 using BLL.Interfaces;
+using BLL.Pagination;
 using DAL.EF.Entities;
 using DAL.EF.UoW;
 using Microsoft.EntityFrameworkCore;
@@ -24,11 +26,24 @@ namespace BLL.Services
             _uow = unitOfWork;
         }
 
-        public async Task<IEnumerable<CompanieResponseDto>> GetAllAsync(string? sortBy = null, string? sortDirection = null, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<CompanieResponseDto>> GetAllAsync(string? searchTerm = null, string? sortBy = null, string? sortDirection = null, CancellationToken cancellationToken = default)
         {
-            var companies = await _uow.Companies.GetAllAsync(
-                include: query => query.Include(c => c.ActivityType),
-                cancellationToken: cancellationToken);
+            var query = _uow.Companies.GetAll();
+            query = query.Include(c => c.ActivityType);
+
+            // Застосовуємо пошук
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var searchTermLower = searchTerm.ToLower();
+                query = query.Where(c => 
+                    c.CompanyName.ToLower().Contains(searchTermLower) ||
+                    c.EmailCompany.ToLower().Contains(searchTermLower) ||
+                    c.Address.ToLower().Contains(searchTermLower) ||
+                    c.Phone.ToLower().Contains(searchTermLower) ||
+                    c.ActivityType.ActivityName.ToLower().Contains(searchTermLower));
+            }
+
+            var companies = await query.ToListAsync(cancellationToken);
             var dtos = _mapper.Map<IEnumerable<CompanieResponseDto>>(companies);
 
             if (!string.IsNullOrEmpty(sortBy))
@@ -45,6 +60,60 @@ namespace BLL.Services
                 };
             }
             return dtos;
+        }
+
+        public async Task<PagedList<CompanieResponseDto>> GetPagedAsync(SearchParametersDto searchParams, CancellationToken cancellationToken = default)
+        {
+            var query = _uow.Companies.GetAll();
+            query = query.Include(c => c.ActivityType);
+
+            // Застосовуємо пошук
+            if (!string.IsNullOrWhiteSpace(searchParams.SearchTerm))
+            {
+                var searchTerm = searchParams.SearchTerm.ToLower();
+                query = query.Where(c => 
+                    c.CompanyName.ToLower().Contains(searchTerm) ||
+                    c.EmailCompany.ToLower().Contains(searchTerm) ||
+                    c.Address.ToLower().Contains(searchTerm) ||
+                    c.Phone.ToLower().Contains(searchTerm) ||
+                    c.ActivityType.ActivityName.ToLower().Contains(searchTerm));
+            }
+
+            // Застосовуємо сортування
+            IQueryable<Companie> orderedQuery;
+            if (!string.IsNullOrEmpty(searchParams.SortBy))
+            {
+                bool desc = string.Equals(searchParams.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                orderedQuery = searchParams.SortBy.ToLower() switch
+                {
+                    "companyname" => desc ? query.OrderByDescending(x => x.CompanyName) : query.OrderBy(x => x.CompanyName),
+                    "emailcompany" => desc ? query.OrderByDescending(x => x.EmailCompany) : query.OrderBy(x => x.EmailCompany),
+                    "address" => desc ? query.OrderByDescending(x => x.Address) : query.OrderBy(x => x.Address),
+                    "phone" => desc ? query.OrderByDescending(x => x.Phone) : query.OrderBy(x => x.Phone),
+                    "activitytypename" => desc ? query.OrderByDescending(x => x.ActivityType.ActivityName) : query.OrderBy(x => x.ActivityType.ActivityName),
+                    _ => query.OrderBy(x => x.CompanyName)
+                };
+            }
+            else
+            {
+                orderedQuery = query.OrderBy(x => x.CompanyName);
+            }
+
+            // Виконуємо пагінацію на рівні Entity
+            var pagedEntities = await PagedList<Companie>.ToPagedListAsync(
+                orderedQuery, 
+                searchParams.PageNumber, 
+                searchParams.PageSize, 
+                cancellationToken);
+
+            // Мапимо результат
+            var dtos = _mapper.Map<List<CompanieResponseDto>>(pagedEntities.Items);
+            
+            return new PagedList<CompanieResponseDto>(
+                dtos, 
+                pagedEntities.TotalCount, 
+                pagedEntities.CurrentPage, 
+                pagedEntities.PageSize);
         }
 
         public async Task<CompanieResponseDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

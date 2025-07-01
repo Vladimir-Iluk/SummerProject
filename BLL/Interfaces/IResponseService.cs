@@ -1,4 +1,6 @@
 ﻿using BLL.DTO.ResponseDto;
+using BLL.DTO.CommonDto;
+using BLL.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +11,8 @@ namespace BLL.Interfaces
 {
     public interface IResponseService
     {
-        Task<IEnumerable<ResponseResponseDto>> GetAllAsync(CancellationToken cancellationToken = default);
+        Task<IEnumerable<ResponseResponseDto>> GetAllAsync(string? searchTerm = null, CancellationToken cancellationToken = default);
+        Task<PagedList<ResponseResponseDto>> GetPagedAsync(SearchParametersDto searchParams, CancellationToken cancellationToken = default);
         Task<ResponseResponseDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task<ResponseResponseDto> CreateAsync(ResponseCreateDto dto, CancellationToken cancellationToken = default);
         Task<ResponseResponseDto?> UpdateAsync(Guid id, ResponseUpdateDto dto, CancellationToken cancellationToken = default);

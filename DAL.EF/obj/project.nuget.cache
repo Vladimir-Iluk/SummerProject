@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "gcJrkxSkqhY=",
+  "dgSpecHash": "WCi5s7GINmg=",
   "success": true,
   "projectFilePath": "C:\\Users\\Lenovo\\source\\repos\\Vladimir-Iluk\\SummerProject\\DAL.EF\\DAL.EF.csproj",
   "expectedPackageFiles": [
@@ -17,11 +17,11 @@
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.codeanalysis.csharp.workspaces\\4.5.0\\microsoft.codeanalysis.csharp.workspaces.4.5.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.codeanalysis.workspaces.common\\4.5.0\\microsoft.codeanalysis.workspaces.common.4.5.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.csharp\\4.6.0\\microsoft.csharp.4.6.0.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.3\\microsoft.entityframeworkcore.8.0.3.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\8.0.3\\microsoft.entityframeworkcore.abstractions.8.0.3.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\8.0.3\\microsoft.entityframeworkcore.analyzers.8.0.3.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.4\\microsoft.entityframeworkcore.8.0.4.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\8.0.4\\microsoft.entityframeworkcore.abstractions.8.0.4.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\8.0.4\\microsoft.entityframeworkcore.analyzers.8.0.4.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.design\\8.0.3\\microsoft.entityframeworkcore.design.8.0.3.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\8.0.3\\microsoft.entityframeworkcore.relational.8.0.3.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\8.0.4\\microsoft.entityframeworkcore.relational.8.0.4.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\8.0.3\\microsoft.entityframeworkcore.tools.8.0.3.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\8.0.0\\microsoft.extensions.caching.abstractions.8.0.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.caching.memory\\8.0.0\\microsoft.extensions.caching.memory.8.0.0.nupkg.sha512",
@@ -37,8 +37,8 @@
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\nest\\7.17.5\\nest.7.17.5.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\npgsql\\8.0.2\\npgsql.8.0.2.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\8.0.2\\npgsql.entityframeworkcore.postgresql.8.0.2.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\npgsql\\8.0.3\\npgsql.8.0.3.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\8.0.4\\npgsql.entityframeworkcore.postgresql.8.0.4.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\system.collections.immutable\\6.0.0\\system.collections.immutable.6.0.0.nupkg.sha512",
@@ -59,11 +59,11 @@
   ],
   "logs": [
     {
-      "code": "NU1903",
+      "code": "NU1603",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "У пакета \"Npgsql\" 8.0.2 есть известная уязвимость https://github.com/advisories/GHSA-x9vc-6hfv-hg8c (уровень серьезности: высокий уровень)",
-      "libraryId": "Npgsql",
+      "message": "DAL.EF зависит от Npgsql.EntityFrameworkCore.PostgreSQL (>= 8.0.3), но Npgsql.EntityFrameworkCore.PostgreSQL 8.0.3 не найден. Использовано наилучшее приближенное соответствие Npgsql.EntityFrameworkCore.PostgreSQL 8.0.4.",
+      "libraryId": "Npgsql.EntityFrameworkCore.PostgreSQL",
       "targetGraphs": [
         "net8.0"
       ]

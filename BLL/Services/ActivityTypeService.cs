@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using BLL.DTO.ActivityTypeDto;
+using BLL.DTO.CommonDto;
 using BLL.Interfaces;
+using BLL.Pagination;
 using DAL.EF.Entities;
 using DAL.EF.UoW;
 using Microsoft.EntityFrameworkCore;
@@ -23,11 +25,20 @@ namespace BLL.Services
             _uow = unitOfWork;
         }
 
-        public async Task<IEnumerable<ActivityTypeResponseDto>> GetAllAsync(string? sortBy = null, string? sortDirection = null, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<ActivityTypeResponseDto>> GetAllAsync(string? searchTerm = null, string? sortBy = null, string? sortDirection = null, CancellationToken cancellationToken = default)
         {
-            var list = await _uow.ActivityTypes.GetAllAsync(
-                include: query => query.Include(at => at.Workers).Include(at => at.Companies),
-                cancellationToken: cancellationToken);
+            var query = _uow.ActivityTypes.GetAll();
+            query = query.Include(at => at.Workers).Include(at => at.Companies);
+
+            // Застосовуємо пошук
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var searchTermLower = searchTerm.ToLower();
+                query = query.Where(at => 
+                    at.ActivityName.ToLower().Contains(searchTermLower));
+            }
+
+            var list = await query.ToListAsync(cancellationToken);
             var dtos = _mapper.Map<IEnumerable<ActivityTypeResponseDto>>(list);
 
             if (!string.IsNullOrEmpty(sortBy))
@@ -40,6 +51,52 @@ namespace BLL.Services
                 };
             }
             return dtos;
+        }
+
+        public async Task<PagedList<ActivityTypeResponseDto>> GetPagedAsync(SearchParametersDto searchParams, CancellationToken cancellationToken = default)
+        {
+            var query = _uow.ActivityTypes.GetAll();
+            query = query.Include(at => at.Workers).Include(at => at.Companies);
+
+            // Застосовуємо пошук
+            if (!string.IsNullOrWhiteSpace(searchParams.SearchTerm))
+            {
+                var searchTerm = searchParams.SearchTerm.ToLower();
+                query = query.Where(at => 
+                    at.ActivityName.ToLower().Contains(searchTerm));
+            }
+
+            // Застосовуємо сортування
+            IQueryable<ActivityType> orderedQuery;
+            if (!string.IsNullOrEmpty(searchParams.SortBy))
+            {
+                bool desc = string.Equals(searchParams.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                orderedQuery = searchParams.SortBy.ToLower() switch
+                {
+                    "activityname" => desc ? query.OrderByDescending(x => x.ActivityName) : query.OrderBy(x => x.ActivityName),
+                    _ => query.OrderBy(x => x.ActivityName)
+                };
+            }
+            else
+            {
+                orderedQuery = query.OrderBy(x => x.ActivityName);
+            }
+
+            // Виконуємо пагінацію на рівні Entity
+            var pagedEntities = await PagedList<ActivityType>.ToPagedListAsync(
+                orderedQuery, 
+                searchParams.PageNumber, 
+                searchParams.PageSize, 
+                cancellationToken);
+
+            // Мапимо результат
+            var dtos = _mapper.Map<List<ActivityTypeResponseDto>>(pagedEntities.Items);
+            
+            return new PagedList<ActivityTypeResponseDto>(
+                dtos, 
+                pagedEntities.TotalCount, 
+                pagedEntities.CurrentPage, 
+                pagedEntities.PageSize);
         }
 
         public async Task<ActivityTypeResponseDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

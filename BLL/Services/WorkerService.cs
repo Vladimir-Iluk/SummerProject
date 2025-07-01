@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using BLL.DTO.WorkerDto;
+using BLL.DTO.CommonDto;
 using BLL.Interfaces;
+using BLL.Pagination;
 using DAL.EF.Entities;
 using DAL.EF.UoW;
 using Microsoft.EntityFrameworkCore;
@@ -22,11 +24,24 @@ namespace BLL.Services
             _uow = unitOfWork;
         }
 
-        public async Task<IEnumerable<WorkerResponseDto>> GetAllAsync(string? sortBy = null, string? sortDirection = null, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<WorkerResponseDto>> GetAllAsync(string? searchTerm = null, string? sortBy = null, string? sortDirection = null, CancellationToken cancellationToken = default)
         {
-            var workers = await _uow.Workers.GetAllAsync(
-                include: query => query.Include(w => w.ActivityType),
-                cancellationToken: cancellationToken);
+            var query = _uow.Workers.GetAll();
+            query = query.Include(w => w.ActivityType);
+
+            // Застосовуємо пошук
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var searchTermLower = searchTerm.ToLower();
+                query = query.Where(w => 
+                    w.FirstName.ToLower().Contains(searchTermLower) ||
+                    w.LastName.ToLower().Contains(searchTermLower) ||
+                    w.Email.ToLower().Contains(searchTermLower) ||
+                    w.Qualification.ToLower().Contains(searchTermLower) ||
+                    w.ActivityType.ActivityName.ToLower().Contains(searchTermLower));
+            }
+
+            var workers = await query.ToListAsync(cancellationToken);
             var dtos = _mapper.Map<IEnumerable<WorkerResponseDto>>(workers);
 
             if (!string.IsNullOrEmpty(sortBy))
@@ -34,16 +49,72 @@ namespace BLL.Services
                 bool desc = string.Equals(sortDirection, "desc", StringComparison.OrdinalIgnoreCase);
                 dtos = sortBy.ToLower() switch
                 {
-                    "lastname" => desc ? dtos.OrderByDescending(x => x.LastName) : dtos.OrderBy(x => x.LastName),
                     "firstname" => desc ? dtos.OrderByDescending(x => x.FirstName) : dtos.OrderBy(x => x.FirstName),
-                    "qualification" => desc ? dtos.OrderByDescending(x => x.Qualification) : dtos.OrderBy(x => x.Qualification),
+                    "lastname" => desc ? dtos.OrderByDescending(x => x.LastName) : dtos.OrderBy(x => x.LastName),
                     "email" => desc ? dtos.OrderByDescending(x => x.Email) : dtos.OrderBy(x => x.Email),
+                    "qualification" => desc ? dtos.OrderByDescending(x => x.Qualification) : dtos.OrderBy(x => x.Qualification),
                     "expectedsalary" => desc ? dtos.OrderByDescending(x => x.ExpectedSalary) : dtos.OrderBy(x => x.ExpectedSalary),
                     "activitytypename" => desc ? dtos.OrderByDescending(x => x.ActivityTypeName) : dtos.OrderBy(x => x.ActivityTypeName),
                     _ => dtos
                 };
             }
             return dtos;
+        }
+
+        public async Task<PagedList<WorkerResponseDto>> GetPagedAsync(SearchParametersDto searchParams, CancellationToken cancellationToken = default)
+        {
+            var query = _uow.Workers.GetAll();
+            query = query.Include(w => w.ActivityType);
+
+            // Застосовуємо пошук
+            if (!string.IsNullOrWhiteSpace(searchParams.SearchTerm))
+            {
+                var searchTerm = searchParams.SearchTerm.ToLower();
+                query = query.Where(w => 
+                    w.LastName.ToLower().Contains(searchTerm) ||
+                    w.FirstName.ToLower().Contains(searchTerm) ||
+                    w.Qualification.ToLower().Contains(searchTerm) ||
+                    w.Email.ToLower().Contains(searchTerm) ||
+                    w.ExpectedSalary.ToString().Contains(searchTerm) ||
+                    w.ActivityType.ActivityName.ToLower().Contains(searchTerm));
+            }
+
+            // Застосовуємо сортування
+            IQueryable<Worker> orderedQuery;
+            if (!string.IsNullOrEmpty(searchParams.SortBy))
+            {
+                bool desc = string.Equals(searchParams.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                orderedQuery = searchParams.SortBy.ToLower() switch
+                {
+                    "lastname" => desc ? query.OrderByDescending(x => x.LastName) : query.OrderBy(x => x.LastName),
+                    "firstname" => desc ? query.OrderByDescending(x => x.FirstName) : query.OrderBy(x => x.FirstName),
+                    "qualification" => desc ? query.OrderByDescending(x => x.Qualification) : query.OrderBy(x => x.Qualification),
+                    "email" => desc ? query.OrderByDescending(x => x.Email) : query.OrderBy(x => x.Email),
+                    "expectedsalary" => desc ? query.OrderByDescending(x => x.ExpectedSalary) : query.OrderBy(x => x.ExpectedSalary),
+                    "activitytypename" => desc ? query.OrderByDescending(x => x.ActivityType.ActivityName) : query.OrderBy(x => x.ActivityType.ActivityName),
+                    _ => query.OrderBy(x => x.LastName)
+                };
+            }
+            else
+            {
+                orderedQuery = query.OrderBy(x => x.LastName);
+            }
+
+            // Виконуємо пагінацію на рівні Entity
+            var pagedEntities = await PagedList<Worker>.ToPagedListAsync(
+                orderedQuery, 
+                searchParams.PageNumber, 
+                searchParams.PageSize, 
+                cancellationToken);
+
+            // Мапимо результат
+            var dtos = _mapper.Map<List<WorkerResponseDto>>(pagedEntities.Items);
+            
+            return new PagedList<WorkerResponseDto>(
+                dtos, 
+                pagedEntities.TotalCount, 
+                pagedEntities.CurrentPage, 
+                pagedEntities.PageSize);
         }
 
         public async Task<WorkerResponseDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

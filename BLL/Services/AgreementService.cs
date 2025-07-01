@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using BLL.DTO.AgreementDto;
+using BLL.DTO.CommonDto;
 using BLL.Interfaces;
+using BLL.Pagination;
 using DAL.EF.Entities;
 using DAL.EF.UoW;
 using System;
@@ -30,11 +32,23 @@ namespace BLL.Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<AgreementResponseDto>> GetAllAsync(string? sortBy = null, string? sortDirection = null, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<AgreementResponseDto>> GetAllAsync(string? searchTerm = null, string? sortBy = null, string? sortDirection = null, CancellationToken cancellationToken = default)
         {
-            var agreements = await _uow.Agreements.GetAllAsync(
-                include: query => query.Include(a => a.Worker).Include(a => a.Companie),
-                cancellationToken: cancellationToken);
+            var query = _uow.Agreements.GetAll();
+            query = query.Include(a => a.Worker).Include(a => a.Companie);
+
+            // Застосовуємо пошук
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var searchTermLower = searchTerm.ToLower();
+                query = query.Where(a => 
+                    a.Worker.FirstName.ToLower().Contains(searchTermLower) ||
+                    a.Worker.LastName.ToLower().Contains(searchTermLower) ||
+                    a.Companie.CompanyName.ToLower().Contains(searchTermLower) ||
+                    a.Position.ToLower().Contains(searchTermLower));
+            }
+
+            var agreements = await query.ToListAsync(cancellationToken);
             var dtos = _mapper.Map<IEnumerable<AgreementResponseDto>>(agreements);
 
             if (!string.IsNullOrEmpty(sortBy))
@@ -42,7 +56,7 @@ namespace BLL.Services
                 bool desc = string.Equals(sortDirection, "desc", StringComparison.OrdinalIgnoreCase);
                 dtos = sortBy.ToLower() switch
                 {
-                    "workerfullname" => desc ? dtos.OrderByDescending(x => x.WorkerFullName) : dtos.OrderBy(x => x.WorkerFullName),
+                    "workername" => desc ? dtos.OrderByDescending(x => x.WorkerFullName) : dtos.OrderBy(x => x.WorkerFullName),
                     "companyname" => desc ? dtos.OrderByDescending(x => x.CompanyName) : dtos.OrderBy(x => x.CompanyName),
                     "position" => desc ? dtos.OrderByDescending(x => x.Position) : dtos.OrderBy(x => x.Position),
                     "commission" => desc ? dtos.OrderByDescending(x => x.Commission) : dtos.OrderBy(x => x.Commission),
@@ -50,6 +64,58 @@ namespace BLL.Services
                 };
             }
             return dtos;
+        }
+
+        public async Task<PagedList<AgreementResponseDto>> GetPagedAsync(SearchParametersDto searchParams, CancellationToken cancellationToken = default)
+        {
+            var query = _uow.Agreements.GetAll();
+            query = query.Include(a => a.Worker).Include(a => a.Companie);
+
+            // Застосовуємо пошук
+            if (!string.IsNullOrWhiteSpace(searchParams.SearchTerm))
+            {
+                var searchTerm = searchParams.SearchTerm.ToLower();
+                query = query.Where(a => 
+                    a.Worker.FirstName.ToLower().Contains(searchTerm) ||
+                    a.Worker.LastName.ToLower().Contains(searchTerm) ||
+                    a.Companie.CompanyName.ToLower().Contains(searchTerm) ||
+                    a.Position.ToLower().Contains(searchTerm));
+            }
+
+            // Застосовуємо сортування
+            IQueryable<Agreement> orderedQuery;
+            if (!string.IsNullOrEmpty(searchParams.SortBy))
+            {
+                bool desc = string.Equals(searchParams.SortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                orderedQuery = searchParams.SortBy.ToLower() switch
+                {
+                    "workername" => desc ? query.OrderByDescending(x => x.Worker.LastName) : query.OrderBy(x => x.Worker.LastName),
+                    "companyname" => desc ? query.OrderByDescending(x => x.Companie.CompanyName) : query.OrderBy(x => x.Companie.CompanyName),
+                    "position" => desc ? query.OrderByDescending(x => x.Position) : query.OrderBy(x => x.Position),
+                    "commission" => desc ? query.OrderByDescending(x => x.Commission) : query.OrderBy(x => x.Commission),
+                    _ => query.OrderBy(x => x.Position)
+                };
+            }
+            else
+            {
+                orderedQuery = query.OrderBy(x => x.Position);
+            }
+
+            // Виконуємо пагінацію на рівні Entity
+            var pagedEntities = await PagedList<Agreement>.ToPagedListAsync(
+                orderedQuery, 
+                searchParams.PageNumber, 
+                searchParams.PageSize, 
+                cancellationToken);
+
+            // Мапимо результат
+            var dtos = _mapper.Map<List<AgreementResponseDto>>(pagedEntities.Items);
+            
+            return new PagedList<AgreementResponseDto>(
+                dtos, 
+                pagedEntities.TotalCount, 
+                pagedEntities.CurrentPage, 
+                pagedEntities.PageSize);
         }
 
         public async Task<AgreementResponseDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

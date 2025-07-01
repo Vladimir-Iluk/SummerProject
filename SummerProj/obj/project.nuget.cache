@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "jvluspsIIw4=",
+  "dgSpecHash": "ib1cxA9siEw=",
   "success": true,
   "projectFilePath": "C:\\Users\\Lenovo\\source\\repos\\Vladimir-Iluk\\SummerProject\\SummerProj\\SummerProj.Api.csproj",
   "expectedPackageFiles": [
@@ -27,11 +27,11 @@
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.data.sqlclient\\5.1.5\\microsoft.data.sqlclient.5.1.5.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\5.1.1\\microsoft.data.sqlclient.sni.runtime.5.1.1.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.3\\microsoft.entityframeworkcore.8.0.3.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\8.0.3\\microsoft.entityframeworkcore.abstractions.8.0.3.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\8.0.3\\microsoft.entityframeworkcore.analyzers.8.0.3.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.4\\microsoft.entityframeworkcore.8.0.4.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\8.0.4\\microsoft.entityframeworkcore.abstractions.8.0.4.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\8.0.4\\microsoft.entityframeworkcore.analyzers.8.0.4.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.design\\8.0.3\\microsoft.entityframeworkcore.design.8.0.3.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\8.0.3\\microsoft.entityframeworkcore.relational.8.0.3.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\8.0.4\\microsoft.entityframeworkcore.relational.8.0.4.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.sqlserver\\8.0.3\\microsoft.entityframeworkcore.sqlserver.8.0.3.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\8.0.3\\microsoft.entityframeworkcore.tools.8.0.3.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
@@ -60,8 +60,8 @@
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\nest\\7.17.5\\nest.7.17.5.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\npgsql\\8.0.2\\npgsql.8.0.2.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\8.0.2\\npgsql.entityframeworkcore.postgresql.8.0.2.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\npgsql\\8.0.3\\npgsql.8.0.3.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\8.0.4\\npgsql.entityframeworkcore.postgresql.8.0.4.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\swashbuckle.aspnetcore\\6.6.2\\swashbuckle.aspnetcore.6.6.2.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.6.2\\swashbuckle.aspnetcore.swagger.6.6.2.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.6.2\\swashbuckle.aspnetcore.swaggergen.6.6.2.nupkg.sha512",
@@ -102,11 +102,11 @@
   ],
   "logs": [
     {
-      "code": "NU1903",
+      "code": "NU1603",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "У пакета \"Npgsql\" 8.0.2 есть известная уязвимость https://github.com/advisories/GHSA-x9vc-6hfv-hg8c (уровень серьезности: высокий уровень)",
-      "libraryId": "Npgsql",
+      "message": "SummerProj.Api зависит от Npgsql.EntityFrameworkCore.PostgreSQL (>= 8.0.3), но Npgsql.EntityFrameworkCore.PostgreSQL 8.0.3 не найден. Использовано наилучшее приближенное соответствие Npgsql.EntityFrameworkCore.PostgreSQL 8.0.4.",
+      "libraryId": "Npgsql.EntityFrameworkCore.PostgreSQL",
       "targetGraphs": [
         "net8.0"
       ]

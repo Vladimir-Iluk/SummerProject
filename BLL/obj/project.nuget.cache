@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "3Hw06tjJ5fA=",
+  "dgSpecHash": "dYggd9HFGUY=",
   "success": true,
   "projectFilePath": "C:\\Users\\Lenovo\\source\\repos\\Vladimir-Iluk\\SummerProject\\BLL\\BLL.csproj",
   "expectedPackageFiles": [
@@ -13,10 +13,10 @@
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\8.0.3\\microsoft.aspnetcore.cryptography.keyderivation.8.0.3.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.aspnetcore.identity.entityframeworkcore\\8.0.3\\microsoft.aspnetcore.identity.entityframeworkcore.8.0.3.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.3\\microsoft.entityframeworkcore.8.0.3.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\8.0.3\\microsoft.entityframeworkcore.abstractions.8.0.3.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\8.0.3\\microsoft.entityframeworkcore.analyzers.8.0.3.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\8.0.3\\microsoft.entityframeworkcore.relational.8.0.3.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore\\8.0.4\\microsoft.entityframeworkcore.8.0.4.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\8.0.4\\microsoft.entityframeworkcore.abstractions.8.0.4.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\8.0.4\\microsoft.entityframeworkcore.analyzers.8.0.4.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\8.0.4\\microsoft.entityframeworkcore.relational.8.0.4.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\8.0.3\\microsoft.entityframeworkcore.tools.8.0.3.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\8.0.0\\microsoft.extensions.caching.abstractions.8.0.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.caching.memory\\8.0.0\\microsoft.extensions.caching.memory.8.0.0.nupkg.sha512",
@@ -36,19 +36,19 @@
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.identitymodel.protocols.openidconnect\\7.1.2\\microsoft.identitymodel.protocols.openidconnect.7.1.2.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.identitymodel.tokens\\7.1.2\\microsoft.identitymodel.tokens.7.1.2.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\nest\\7.17.5\\nest.7.17.5.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\npgsql\\8.0.2\\npgsql.8.0.2.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\8.0.2\\npgsql.entityframeworkcore.postgresql.8.0.2.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\npgsql\\8.0.3\\npgsql.8.0.3.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\8.0.4\\npgsql.entityframeworkcore.postgresql.8.0.4.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\system.diagnostics.diagnosticsource\\5.0.0\\system.diagnostics.diagnosticsource.5.0.0.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\system.identitymodel.tokens.jwt\\7.1.2\\system.identitymodel.tokens.jwt.7.1.2.nupkg.sha512"
   ],
   "logs": [
     {
-      "code": "NU1903",
+      "code": "NU1603",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "У пакета \"Npgsql\" 8.0.2 есть известная уязвимость https://github.com/advisories/GHSA-x9vc-6hfv-hg8c (уровень серьезности: высокий уровень)",
-      "libraryId": "Npgsql",
+      "message": "BLL зависит от Npgsql.EntityFrameworkCore.PostgreSQL (>= 8.0.3), но Npgsql.EntityFrameworkCore.PostgreSQL 8.0.3 не найден. Использовано наилучшее приближенное соответствие Npgsql.EntityFrameworkCore.PostgreSQL 8.0.4.",
+      "libraryId": "Npgsql.EntityFrameworkCore.PostgreSQL",
       "targetGraphs": [
         "net8.0"
       ]

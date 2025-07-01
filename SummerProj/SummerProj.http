@@ -1,6 +1,0 @@
-@SummerProj_HostAddress = http://localhost:5049
-
-GET {{SummerProj_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

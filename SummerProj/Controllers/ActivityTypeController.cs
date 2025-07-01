@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BLL.Interfaces;
 using BLL.DTO.ActivityTypeDto;
+using BLL.DTO.CommonDto;
 using BLL.Pagination;
 using BLL.Exceptions;
 using System.ComponentModel.DataAnnotations;
@@ -24,29 +25,39 @@ namespace SummerProj.Api.Controllers
         }
 
         /// <summary>
-        /// Отримати всі типи активності
+        /// Отримати типи активності з пагінацією та пошуком
         /// </summary>
-        /// <param name="sortBy">Параметр сортування</param>
-        /// <param name="sortDirection">Напрямок сортування</param>
+        /// <param name="searchParams">Параметри пошуку та пагінації</param>
         /// <param name="cancellationToken">Токен скасування</param>
-        /// <returns>Список всіх типів активності</returns>
+        /// <returns>Сторінкований список типів активності</returns>
         [HttpGet]
         [AllowAnonymous] // Доступно всім
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<ActivityTypeResponseDto>>> GetAllAsync(
-            [FromQuery] string? sortBy = null,
-            [FromQuery] string? sortDirection = null,
+        public async Task<ActionResult<PagedList<ActivityTypeResponseDto>>> GetAllAsync(
+            [FromQuery] SearchParametersDto searchParams,
             CancellationToken cancellationToken = default)
         {
             try
             {
-                var activityTypes = await _activityTypeService.GetAllAsync(sortBy, sortDirection, cancellationToken);
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState
+                        .Where(x => x.Value.Errors.Count > 0)
+                        .ToDictionary(
+                            kvp => kvp.Key,
+                            kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                        );
+
+                    return BadRequest(new { message = "Неправильні параметри пошуку", errors });
+                }
+
+                var activityTypes = await _activityTypeService.GetPagedAsync(searchParams, cancellationToken);
                 return Ok(activityTypes);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Помилка при отриманні типів активності");
                 return StatusCode(StatusCodes.Status500InternalServerError, 
                     new { message = "Помилка при отриманні типів активності", error = ex.Message });
             }

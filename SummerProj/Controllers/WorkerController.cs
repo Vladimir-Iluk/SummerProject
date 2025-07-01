@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using BLL.Interfaces;
 using BLL.DTO.WorkerDto;
+using BLL.DTO.CommonDto;
 using BLL.Pagination;
 using BLL.Exceptions;
 using System.ComponentModel.DataAnnotations;
@@ -21,24 +22,35 @@ namespace SummerProj.Api.Controllers
         }
 
         /// <summary>
-        /// Отримати всіх працівників
+        /// Отримати працівників з пагінацією та пошуком
         /// </summary>
-        /// <param name="sortBy">Поле для сортування</param>
-        /// <param name="sortDirection">Напрямок сортування</param>
+        /// <param name="searchParams">Параметри пошуку та пагінації</param>
         /// <param name="cancellationToken">Токен скасування</param>
-        /// <returns>Список всіх працівників</returns>
+        /// <returns>Сторінкований список працівників</returns>
         [HttpGet]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<WorkerResponseDto>>> GetAllAsync(
-            [FromQuery] string? sortBy = null,
-            [FromQuery] string? sortDirection = null,
+        public async Task<ActionResult<PagedList<WorkerResponseDto>>> GetAllAsync(
+            [FromQuery] SearchParametersDto searchParams,
             CancellationToken cancellationToken = default)
         {
             try
             {
-                var workers = await _workerService.GetAllAsync(sortBy, sortDirection, cancellationToken);
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState
+                        .Where(x => x.Value.Errors.Count > 0)
+                        .ToDictionary(
+                            kvp => kvp.Key,
+                            kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                        );
+
+                    return BadRequest(new { message = "Неправильні параметри пошуку", errors });
+                }
+
+                var workers = await _workerService.GetPagedAsync(searchParams, cancellationToken);
                 return Ok(workers);
             }
             catch (Exception ex)
