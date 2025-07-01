@@ -26,6 +26,8 @@ namespace SummerProj.Api.Controllers
         /// <summary>
         /// Отримати всі типи активності
         /// </summary>
+        /// <param name="sortBy">Параметр сортування</param>
+        /// <param name="sortDirection">Напрямок сортування</param>
         /// <param name="cancellationToken">Токен скасування</param>
         /// <returns>Список всіх типів активності</returns>
         [HttpGet]
@@ -33,11 +35,13 @@ namespace SummerProj.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<ActivityTypeResponseDto>>> GetAllAsync(
+            [FromQuery] string? sortBy = null,
+            [FromQuery] string? sortDirection = null,
             CancellationToken cancellationToken = default)
         {
             try
             {
-                var activityTypes = await _activityTypeService.GetAllAsync(cancellationToken);
+                var activityTypes = await _activityTypeService.GetAllAsync(sortBy, sortDirection, cancellationToken);
                 return Ok(activityTypes);
             }
             catch (Exception ex)

@@ -6,6 +6,7 @@ using DAL.EF.UoW;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BLL.Services
@@ -21,12 +22,28 @@ namespace BLL.Services
             _uow = unitOfWork;
         }
 
-        public async Task<IEnumerable<WorkerResponseDto>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<WorkerResponseDto>> GetAllAsync(string? sortBy = null, string? sortDirection = null, CancellationToken cancellationToken = default)
         {
             var workers = await _uow.Workers.GetAllAsync(
                 include: query => query.Include(w => w.ActivityType),
                 cancellationToken: cancellationToken);
-            return _mapper.Map<IEnumerable<WorkerResponseDto>>(workers);
+            var dtos = _mapper.Map<IEnumerable<WorkerResponseDto>>(workers);
+
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                bool desc = string.Equals(sortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                dtos = sortBy.ToLower() switch
+                {
+                    "lastname" => desc ? dtos.OrderByDescending(x => x.LastName) : dtos.OrderBy(x => x.LastName),
+                    "firstname" => desc ? dtos.OrderByDescending(x => x.FirstName) : dtos.OrderBy(x => x.FirstName),
+                    "qualification" => desc ? dtos.OrderByDescending(x => x.Qualification) : dtos.OrderBy(x => x.Qualification),
+                    "email" => desc ? dtos.OrderByDescending(x => x.Email) : dtos.OrderBy(x => x.Email),
+                    "expectedsalary" => desc ? dtos.OrderByDescending(x => x.ExpectedSalary) : dtos.OrderBy(x => x.ExpectedSalary),
+                    "activitytypename" => desc ? dtos.OrderByDescending(x => x.ActivityTypeName) : dtos.OrderBy(x => x.ActivityTypeName),
+                    _ => dtos
+                };
+            }
+            return dtos;
         }
 
         public async Task<WorkerResponseDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

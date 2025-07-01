@@ -6,6 +6,7 @@ using DAL.EF.UoW;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,12 +23,23 @@ namespace BLL.Services
             _uow = unitOfWork;
         }
 
-        public async Task<IEnumerable<ActivityTypeResponseDto>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<ActivityTypeResponseDto>> GetAllAsync(string? sortBy = null, string? sortDirection = null, CancellationToken cancellationToken = default)
         {
             var list = await _uow.ActivityTypes.GetAllAsync(
                 include: query => query.Include(at => at.Workers).Include(at => at.Companies),
                 cancellationToken: cancellationToken);
-            return _mapper.Map<IEnumerable<ActivityTypeResponseDto>>(list);
+            var dtos = _mapper.Map<IEnumerable<ActivityTypeResponseDto>>(list);
+
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                bool desc = string.Equals(sortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                dtos = sortBy.ToLower() switch
+                {
+                    "activityname" => desc ? dtos.OrderByDescending(x => x.ActivityName) : dtos.OrderBy(x => x.ActivityName),
+                    _ => dtos
+                };
+            }
+            return dtos;
         }
 
         public async Task<ActivityTypeResponseDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

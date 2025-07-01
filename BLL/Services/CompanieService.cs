@@ -24,12 +24,27 @@ namespace BLL.Services
             _uow = unitOfWork;
         }
 
-        public async Task<IEnumerable<CompanieResponseDto>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<CompanieResponseDto>> GetAllAsync(string? sortBy = null, string? sortDirection = null, CancellationToken cancellationToken = default)
         {
             var companies = await _uow.Companies.GetAllAsync(
                 include: query => query.Include(c => c.ActivityType),
                 cancellationToken: cancellationToken);
-            return _mapper.Map<IEnumerable<CompanieResponseDto>>(companies);
+            var dtos = _mapper.Map<IEnumerable<CompanieResponseDto>>(companies);
+
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                bool desc = string.Equals(sortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                dtos = sortBy.ToLower() switch
+                {
+                    "companyname" => desc ? dtos.OrderByDescending(x => x.CompanyName) : dtos.OrderBy(x => x.CompanyName),
+                    "emailcompany" => desc ? dtos.OrderByDescending(x => x.EmailCompany) : dtos.OrderBy(x => x.EmailCompany),
+                    "address" => desc ? dtos.OrderByDescending(x => x.Address) : dtos.OrderBy(x => x.Address),
+                    "phone" => desc ? dtos.OrderByDescending(x => x.Phone) : dtos.OrderBy(x => x.Phone),
+                    "activitytypename" => desc ? dtos.OrderByDescending(x => x.ActivityTypeName) : dtos.OrderBy(x => x.ActivityTypeName),
+                    _ => dtos
+                };
+            }
+            return dtos;
         }
 
         public async Task<CompanieResponseDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

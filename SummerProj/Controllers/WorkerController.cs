@@ -23,6 +23,8 @@ namespace SummerProj.Api.Controllers
         /// <summary>
         /// Отримати всіх працівників
         /// </summary>
+        /// <param name="sortBy">Поле для сортування</param>
+        /// <param name="sortDirection">Напрямок сортування</param>
         /// <param name="cancellationToken">Токен скасування</param>
         /// <returns>Список всіх працівників</returns>
         [HttpGet]
@@ -30,11 +32,13 @@ namespace SummerProj.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<WorkerResponseDto>>> GetAllAsync(
+            [FromQuery] string? sortBy = null,
+            [FromQuery] string? sortDirection = null,
             CancellationToken cancellationToken = default)
         {
             try
             {
-                var workers = await _workerService.GetAllAsync(cancellationToken);
+                var workers = await _workerService.GetAllAsync(sortBy, sortDirection, cancellationToken);
                 return Ok(workers);
             }
             catch (Exception ex)

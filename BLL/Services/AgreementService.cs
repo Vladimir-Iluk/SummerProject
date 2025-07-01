@@ -30,12 +30,26 @@ namespace BLL.Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<AgreementResponseDto>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<AgreementResponseDto>> GetAllAsync(string? sortBy = null, string? sortDirection = null, CancellationToken cancellationToken = default)
         {
             var agreements = await _uow.Agreements.GetAllAsync(
                 include: query => query.Include(a => a.Worker).Include(a => a.Companie),
                 cancellationToken: cancellationToken);
-            return _mapper.Map<IEnumerable<AgreementResponseDto>>(agreements);
+            var dtos = _mapper.Map<IEnumerable<AgreementResponseDto>>(agreements);
+
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                bool desc = string.Equals(sortDirection, "desc", StringComparison.OrdinalIgnoreCase);
+                dtos = sortBy.ToLower() switch
+                {
+                    "workerfullname" => desc ? dtos.OrderByDescending(x => x.WorkerFullName) : dtos.OrderBy(x => x.WorkerFullName),
+                    "companyname" => desc ? dtos.OrderByDescending(x => x.CompanyName) : dtos.OrderBy(x => x.CompanyName),
+                    "position" => desc ? dtos.OrderByDescending(x => x.Position) : dtos.OrderBy(x => x.Position),
+                    "commission" => desc ? dtos.OrderByDescending(x => x.Commission) : dtos.OrderBy(x => x.Commission),
+                    _ => dtos
+                };
+            }
+            return dtos;
         }
 
         public async Task<AgreementResponseDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
